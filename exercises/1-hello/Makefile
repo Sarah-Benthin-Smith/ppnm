@@ -1,19 +1,22 @@
+CXXFLAGS = -Wall -Wextra - Werror -std=c++23 -0
+LDLIBS = -lstdc++ - lm
 Out.txt : main
 	./main > Out.txt
 
 main: main.o
-	c++ main.o -o main
+	$(CXX) main.o -o main $(LDLIBS)
 
 main.o : main.cc
-	c++ -c main.cc -o main.o
+	$(CXX) $(CXXFLAGS) -c main.cc -o main.o
 
 .PHONY: clean
 clean:
-	rm -f main main.o Out.txt
+	$(RM) main main.o Out.txt
 
 test:
-	echo CXX
-	echo $(CXX)
+	@echo CXX
+	@echo $(CXX)
+	@echo $(RM)
 
 
 
