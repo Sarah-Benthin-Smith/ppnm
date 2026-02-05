@@ -1,8 +1,9 @@
-#include <cstdio>
+#include<cstdio>
 #include<limits>
-#include <iostream>
+#include<iostream>
 #include<cmath>
-
+#include<iomanip>
+#include "assignment2.h"
 
 int main() {
 float       f=1.0f; while((float)      (1.0f+f) != 1.0f){f/=2.0f;} f*=2.0f;
@@ -18,5 +19,5 @@ double power252=std::pow(2, -52);
 std::cout << "2^-52 = " << power252 << std::endl;
 double power223=std::pow(2, -23);
 std::cout << "2^-23 = " << power223 << std::endl;
-// return 0;
+assignment2::run();
 }
