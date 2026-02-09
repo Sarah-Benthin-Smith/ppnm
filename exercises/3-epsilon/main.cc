@@ -4,6 +4,8 @@
 #include<cmath>
 #include<iomanip>
 #include "assignment2.h"
+#include "assignment3.h"
+
 
 int main() {
 float       f=1.0f; while((float)      (1.0f+f) != 1.0f){f/=2.0f;} f*=2.0f;
@@ -20,4 +22,5 @@ std::cout << "2^-52 = " << power252 << std::endl;
 double power223=std::pow(2, -23);
 std::cout << "2^-23 = " << power223 << std::endl;
 assignment2::run();
+assignment3::run();
 }
