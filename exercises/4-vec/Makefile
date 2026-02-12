@@ -4,13 +4,13 @@ LDLIBS += -lstdc++ -lm
 Out.txt : main
 	./main > Out.txt
 
-main : main.o hello.o
-#	$(CXX) $(LDFLAGS) main.o hello.o $(LDLIBS) -o main
+main : main.o vec.o
+#	$(CXX) $(LDFLAGS) main.o tasks.o $(LDLIBS) -o main
 
-main.o : hello.h main.cc
+main.o : vec.h main.cc
 #	$(CXX) $(CXXFLAGS) -c main.cc -o main.o
 
-hello.o: hello.h hello.cc
+vec.o: vec.h vec.cc
 #	$(CXX) $(CXXFLAGS) -c hello.cc -o hello.o
 
 .PHONY:clean

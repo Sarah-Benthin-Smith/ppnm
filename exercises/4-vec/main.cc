@@ -1,5 +1,8 @@
-#include"hello.h"
+#include "vec.h"
+#include <iostream>
+
 int main(){
-	hello();
-	return 0;
+    vec v(1,2,3);
+    std::cout << v << "\n";
+    return 0;
 }
