@@ -1,48 +1,49 @@
-#include "vec.h"
 #include <iostream>
 #include <iomanip>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <cstdlib>
+#include <fstream>
 
-int main(){
-	using namespace vec_funs;
-    vec a(1,2,3);
-    vec b(4,5,6);
+// int main (int argc, char* argv[]) {
+// 	std::vector<double> numbers;
+// 	for(int i=0;i<argc;++i){
+// 		std::string arg=argv[i];
+// 		if(arg=="-n" && i+1<argc)
+// 			numbers.push_back(std::stod(argv[i+1]));
+// 	}
+//     for(auto n: numbers)
+//         std::cout << n <<" "<< std::sin(n) <<" "<< std::cos(n) <<std::endl;
+//     // exit(EXIT_SUCCESS);
 
-    std::cout << "a = " << a << std::endl;
-    std::cout << "b = " << b << std::endl;
+//     double x;
+//     while( std::cin >> x ){
+//         std::cout << x <<" "<< std::sin(x) <<" "<< std::cos(x) << std::endl;
+//         }
+//     return 0;
+// }
 
-	// Testing addition
-	vec c = a + b;
-	std::cout << "a+b = " << c << std::endl;
-
-	// Testing subtraction
-	vec d = b - a;
-	std::cout << "b-a = " << d << std::endl;
-
-	// Testing multiplication
-	std::cout << "2*a = " << 2*a << std::endl;
-	std::cout << "a*3 = " << a*3 << std::endl;
-
-	// Testing division
-	std::cout << "a/2 = " << a/2 << std::endl;
-
-	// Testing negative vector
-	std:: cout << "-a = " << -a << std::endl;
-
-	// += operator
-    vec e = a;
-    e += b;
-    std::cout << "e += b -> " << e << std::endl;	
-
-	// approximation
-    vec f(1.0000001,2.0000001,3.0000001);
-    std::cout << std::setprecision(10);
-    std::cout << "f = " << f << std::endl;
-    if(approx(a,f)){
-        std::cout << "a approx f" << std::endl;
+int main (int argc, char *argv[]) {
+	std::string infile="", outfile="";
+	for(int i=0;i<argc;i++){
+		std::string arg=argv[i];
+		if(arg=="--input" && i+1 < argc) infile=argv[i+1];
+		if(arg=="--output" && i+1 < argc) outfile=argv[i+1];
+	}
+std::ifstream myinput(infile);
+std::ofstream myoutput(outfile);
+double x;
+if( myinput.is_open() && myoutput.is_open() ){
+	while( myinput >> x ){
+		myoutput << x <<" "<<std::sin(x)<<" "<<std::cos(x)<<std::endl;
+		}
+	}
+else{
+	std::cerr << "Error opening files: " << infile << outfile << std::endl;
+	return EXIT_FAILURE;
     }
-
-    // print method
-    a.print("Vector a: ");
-
-    return 0;
+myinput.close();
+myoutput.close();
+exit(EXIT_SUCCESS);
 }
