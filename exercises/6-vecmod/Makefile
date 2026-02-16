@@ -30,9 +30,8 @@ Out.txt : main
 #	./main > Out.txt
 	./$< > $@
 
-main: main.o vec.o
+main: main.o
 main.o: vec.h
-vec.o: vec.h
 
 .PHONY: clean
 clean:
