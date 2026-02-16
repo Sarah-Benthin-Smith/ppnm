@@ -2,41 +2,45 @@
 #include <iostream>
 #include <string>
 
-struct vec {
-    double x, y, z;
+namespace vec_funs{
 
-    // constructors
-    vec(double x, double y, double z) : x(x), y(y), z(z) {}  // parameterized
-    vec() : vec(0, 0, 0) {}                                    // default
-    vec(const vec&) = default;                                 // copy
-    vec(vec&&) = default;                                      // move
-    ~vec() = default;                                          // destructor
+    struct vec {
+        double x, y, z;
 
-    // assignment
-    vec& operator=(const vec&) = default;                     // copy assignment
-    vec& operator=(vec&&) = default;                          // move assignment
+        // constructors
+        vec(double x, double y, double z) : x(x), y(y), z(z) {}  // parameterized
+        vec() : vec(0, 0, 0) {}                                    // default
+        vec(const vec&) = default;                                 // copy
+        vec(vec&&) = default;                                      // move
+        ~vec() = default;                                          // destructor
 
-    // arithmetic
-    vec& operator+=(const vec&);
-    vec& operator-=(const vec&);
-    vec& operator*=(double);
-    vec& operator/=(double);
+        // assignment
+        vec& operator=(const vec&) = default;                     // copy assignment
+        vec& operator=(vec&&) = default;                          // move assignment
 
-    // utility
-    void set(double a, double b, double c) { x = a; y = b; z = c; }
-    void print(const std::string& s = "") const;              // for debugging
+        // arithmetic
+        vec& operator+=(const vec&);
+        vec& operator-=(const vec&);
+        vec& operator*=(double);
+        vec& operator/=(double);
 
-    // stream output
-    friend std::ostream& operator<<(std::ostream&, const vec&);
-};
+        // utility
+        void set(double a, double b, double c) { x = a; y = b; z = c; }
+        void print(const std::string& s = "") const;              // for debugging
 
-// non-member operators
-vec operator-(const vec&);
-vec operator-(const vec&, const vec&);
-vec operator+(const vec&, const vec&);
-vec operator*(const vec&, double);
-vec operator*(double, const vec&);
-vec operator/(const vec&, double);
+        // stream output
+        friend std::ostream& operator<<(std::ostream&, const vec&);
+    };
 
-// approximate equality
-bool approx(const vec&, const vec&, double acc = 1e-6, double eps = 1e-6);
+    // non-member operators
+    vec operator-(const vec&);
+    vec operator-(const vec&, const vec&);
+    vec operator+(const vec&, const vec&);
+    vec operator*(const vec&, double);
+    vec operator*(double, const vec&);
+    vec operator/(const vec&, double);
+
+    // approximate equality
+    bool approx(const vec&, const vec&, double acc = 1e-6, double eps = 1e-6);
+
+}

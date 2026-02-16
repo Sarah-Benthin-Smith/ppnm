@@ -1,6 +1,6 @@
 #include "vec.h"
 #include <string>
-#include <ostream>
+#include <iostream>
 #include <cmath>
 
 
@@ -8,20 +8,79 @@
 //     std::cout << s << x << " " << y << " " << z << std::endl;
 //     }
 
-void vec::print(const std::string& s) const {
-    std::cout << s << x << " " << y << " " << z << std::endl;
-} 
+namespace vec_funs{
 
-bool approx(double a, double b, double acc, double eps) {
-    return std::abs(a - b) <= acc + eps * std::abs(a + b);
+vec& vec::operator+=(const vec& other){
+    x += other.x;
+    y += other.y;
+    z += other.z;
+    return *this;
 }
 
-// bool approx(const vec& a, const vec& b){
-// 	if(!approx(a.x,b.x))return false;
-// 	if(!approx(a.y,b.y))return false;
-// 	if(!approx(a.z,b.z))return false;
-// 	return true;
-// 	}
+vec& vec::operator-=(const vec& other){
+    x -= other.x;
+    y -= other.y;
+    z -= other.z;
+    return *this;
+}
+
+vec& vec::operator*=(double n){
+    x *= n;
+    y *= n;
+    z *= n;
+    return *this;
+}
+
+vec& vec::operator/=(double n){
+    x /= n;
+    y /= n;
+    z /= n;
+    return *this;
+}
+
+// non menber
+
+vec operator+(const vec& a, const vec& b){
+    vec r = a;
+    r += b;
+    return r;
+}
+
+vec operator-(const vec& a){
+    vec r = a;
+    r *= -1;
+    return r;
+}
+
+vec operator-(const vec& a, const vec& b){
+    vec r = a;
+    r -= b;
+    return r;
+}
+
+vec operator*(const vec& a, double n){
+    vec r = a;
+    r *= n;
+    return r;
+}
+
+vec operator*(double n, const vec& a){
+    vec r = a;
+    r *= n;
+    return r;
+}
+
+vec operator/(const vec& a, double n){
+    vec r = a;
+    r /= n;
+    return r;
+}
+
+bool approx(double a, double b, double acc, double eps) {
+    if(std::fabs(a-b)<acc)return true;
+    if(std::fabs(a-b)<eps*(std::fabs(a)+std::fabs(b)))return true;
+    return false;
+}
 
 bool approx(const vec& a, const vec& b, double acc, double eps){
     if(!approx(a.x, b.x, acc, eps)) return false;
@@ -34,3 +93,8 @@ std::ostream& operator<<(std::ostream& os, const vec& v){
     os << "{ " << v.x << ", " << v.y << ", " << v.z << " } ";
     return os;
     }
+
+void vec::print(const std::string& s) const {
+    std::cout << s << x << " " << y << " " << z << std::endl;
+} 
+}
