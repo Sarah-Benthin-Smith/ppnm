@@ -1,0 +1,11 @@
+1. double and float vecs
+double vec = { 1.12346, 2.12346, 3.12346 }
+float vec = { 1.12346, 2.12346, 3.12346 }
+2. Mixing scalar types
+2*a = { 2.24691, 4.24691, 6.24691 }(integer*double)
+3. Adding complex numbers
+complex vec: { (1,1), (2,0), (0,3) }
+4. Any type
+a = { 1.12346, 2.12346, 3.12346 }
+d = { 1.12346, 2.12346, 3.12346 }
+a approx d
