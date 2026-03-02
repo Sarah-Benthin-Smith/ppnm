@@ -18,7 +18,7 @@ int main(int argc,char** argv){
 	std::cerr<<"dx= "<<dx<<"\n";
 	std::cout<<std::scientific;
 	for(double x=xmin;x<=xmax;x+=dx){
-		std::cout<<x<<" "<<funcs::erf(x)<<" "<<std::sin(x)<<"\n";
+		std::cout<<x<<" "<<funcs::erf(x)<<" "<<funcs::sgamma(x)<<" "<<funcs::lngamma(x)<<"\n";
 	}
     // std::cout << x << " "
     //       << funcs::erf(x) << " "
