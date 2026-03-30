@@ -1,18 +1,17 @@
-#ifndef PP_QR_H
-#define PP_QR_H
-
+#pragma once
 #include "matrix.h"
 
 namespace pp {
 
-class qr {
-public:
+struct qr {
     matrix Q;
     matrix R;
 
     qr(const matrix& A);
+
+    vector solve(const vector& b) const;
+    double det() const;
+    matrix inverse() const;
 };
 
 }
-
-#endif

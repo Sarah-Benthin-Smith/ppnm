@@ -1,26 +1,20 @@
 CXXFLAGS = -Wall -Wextra -Werror -std=c++23 -O
-LINK.0 = $(CXX) $(LDFLAGS)
-LDLIBS += -lstdc++ -lm
+LDLIBS += -lm
 
-Out.txt : main
-#	./main > Out.txt
-	./$< > $@
+OBJS = main.o matrix.o vec.o qr.o
 
-main: main.o vec.o matrix.o qr.o
-main.o: vec.h
-vec.o: vec.h
-matrix.o: matrix.h
-qr.o: qr.h
+all: main
 
-.PHONY: clean
+main: $(OBJS)
+	$(CXX) $(OBJS) -o main $(LDLIBS)
+
+main.o: main.cc matrix.h vec.h qr.h
+matrix.o: matrix.cc matrix.h vec.h
+vec.o: vec.cc vec.h
+qr.o: qr.cc qr.h matrix.h vec.h
+
 clean:
-	$(RM) main main.o Out.txt *.o
-
-test:
-	@echo CXX
-	@echo $(CXX)
-	@echo $(RM)
-	@echo $(cc)
+	rm -f *.o main
 
 
 

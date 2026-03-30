@@ -1,32 +1,42 @@
-#ifndef PP_VEC_H
-#define PP_VEC_H
-
+#pragma once
 #include <iostream>
-#include <vector>
 #include <string>
 
-namespace pp{
+struct vec {
+    double x, y, z;
 
-class vector {
-private:
-    std::vector<double> data;
+    // constructors
+    vec(double x, double y, double z) : x(x), y(y), z(z) {}  // parameterized
+    vec() : vec(0, 0, 0) {}                                    // default
+    vec(const vec&) = default;                                 // copy
+    vec(vec&&) = default;                                      // move
+    ~vec() = default;                                          // destructor
 
-public:
-    vector();
-    vector(int n);
-    vector(std::initializer_list<double> list);
+    // assignment
+    vec& operator=(const vec&) = default;                     // copy assignment
+    vec& operator=(vec&&) = default;                          // move assignment
 
-    int size() const;
+    // arithmetic
+    vec& operator+=(const vec&);
+    vec& operator-=(const vec&);
+    vec& operator*=(double);
+    vec& operator/=(double);
 
-    double& operator[](int i);
-    const double& operator[](int i) const;
+    // utility
+    void set(double a, double b, double c) { x = a; y = b; z = c; }
+    void print(const std::string& s = "") const;              // for debugging
 
-    vector operator+(const vector& other) const;
-    vector operator-(const vector& other) const;
-    double dot(const vector& other) const;
-
-    void print() const;
+    // stream output
+    friend std::ostream& operator<<(std::ostream&, const vec&);
 };
 
-}
-#endif
+// non-member operators
+vec operator-(const vec&);
+vec operator-(const vec&, const vec&);
+vec operator+(const vec&, const vec&);
+vec operator*(const vec&, double);
+vec operator*(double, const vec&);
+vec operator/(const vec&, double);
+
+// approximate equality
+bool approx(const vec&, const vec&, double acc = 1e-6, double eps = 1e-6);

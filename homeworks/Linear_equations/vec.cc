@@ -1,63 +1,88 @@
-#include "vec.h"
-#include <stdexcept>
+#include<iostream>
+#include<cmath>
+#include<string>
+#include"vec.h"
+#define SELF (*this)
 
-namespace pp {
-
-vector::vector() {}
-
-vector::vector(int n) : data(n) {}
-
-vector::vector(std::initializer_list<double> list) : data(list) {}
-
-int vector::size() const {
-    return data.size();
+vec& vec::operator+=(const vec& other){
+	x+=other.x;
+	y+=other.y;
+	z+=other.z;
+	return (*this);
 }
 
-double& vector::operator[](int i) {
-    return data[i];
+vec& vec::operator-=(const vec& other){
+	x-=other.x;
+	y-=other.y;
+	z-=other.z;
+	return (*this);
 }
 
-const double& vector::operator[](int i) const {
-    return data[i];
+vec& vec::operator*=(double n){
+	x*=n;
+	y*=n;
+	z*=n;
+	return (*this);
 }
 
-vector vector::operator+(const vector& other) const {
-    if (size() != other.size())
-        throw std::runtime_error("Vector sizes must match");
-
-    vector result(size());
-    for (int i = 0; i < size(); i++)
-        result[i] = data[i] + other[i];
-
-    return result;
+vec& vec::operator/=(double n){
+	x/=n;
+	y/=n;
+	z/=n;
+	return (*this);
 }
 
-vector vector::operator-(const vector& other) const {
-    if (size() != other.size())
-        throw std::runtime_error("Vector sizes must match");
-
-    vector result(size());
-    for (int i = 0; i < size(); i++)
-        result[i] = data[i] - other[i];
-
-    return result;
+vec operator+(const vec& a, const vec& b){
+	vec r=a;
+	r+=b;
+	return r;
 }
 
-double vector::dot(const vector& other) const {
-    if (size() != other.size())
-        throw std::runtime_error("Vector sizes must match");
-
-    double result = 0;
-    for (int i = 0; i < size(); i++)
-        result += data[i] * other[i];
-
-    return result;
+vec operator-(const vec& a){
+	vec r=a;
+	r.x=-r.x;
+	r.y=-r.y;
+	r.z=-r.z;
+	return r;
 }
 
-void vector::print() const {
-    for (double v : data)
-        std::cout << v << " ";
-    std::cout << std::endl;
+vec operator-(const vec& a, const vec& b){
+	vec r=a;
+	r-=b;
+	return r;
 }
 
+vec operator*(const vec& a, double n){
+	vec r=a;
+	r*=n;
+	return r;
 }
+
+vec operator*(double n, const vec& a){
+	vec r=a;
+	r*=n;
+	return r;
+}
+
+bool approx(double a,double b,double acc=1e-6,double eps=1e-6){
+	if(std::fabs(a-b)<acc)return true;
+	if(std::fabs(a-b)<eps*(std::fabs(a)+std::fabs(b)))return true;
+	return false;
+	}
+
+bool approx(const vec& u, const vec& v, double acc, double eps){
+	if(!approx(u.x,v.x,acc,eps))return false;
+	if(!approx(u.y,v.y,acc,eps))return false;
+	if(!approx(u.z,v.z,acc,eps))return false;
+	return true;
+	}
+
+std::ostream& operator<<(std::ostream& os, const vec& v){
+    os << "{ " << v.x << ", " << v.y << ", " << v.z << " } ";
+    return os;
+    }
+
+
+void vec::print(const std::string& s) const {
+	std::cout << s << x << " " << y << " " << z << std::endl;
+	}
