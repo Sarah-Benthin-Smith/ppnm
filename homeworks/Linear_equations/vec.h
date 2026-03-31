@@ -6,7 +6,7 @@ struct vec {
     double x, y, z;
 
     // constructors
-    vec(double x, double y, double z) : x(x), y(y), z(z) {}  // parameterized
+    vec(double x, double y, double z) : x(x), y(y), z(z) {}    // parameterized
     vec() : vec(0, 0, 0) {}                                    // default
     vec(const vec&) = default;                                 // copy
     vec(vec&&) = default;                                      // move
