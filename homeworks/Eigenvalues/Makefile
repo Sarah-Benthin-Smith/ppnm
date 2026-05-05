@@ -5,7 +5,7 @@ OBJS = main.o matrix.o vec.o EVD.o
 
 Out.txt: main
 	./$< > $@
-	./$< -rmax 10 -dr 0.3 > $@
+# 	./$< -rmax 10 -dr 0.3 > $@
 
 all: main
 

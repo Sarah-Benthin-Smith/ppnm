@@ -44,6 +44,35 @@ pp::matrix identity_matrix(int n) {
     return I;
 }
 
+double ground_state_energy(double rmax, double dr) {
+    int npoints = (int)(rmax / dr) - 1;
+
+    pp::vector r(npoints);
+    for (int i = 0; i < npoints; i++) {
+        r[i] = dr * (i + 1);
+    }
+
+    pp::matrix H(npoints, npoints);
+
+    double coeff = -0.5 / (dr * dr);
+
+    for (int i = 0; i < npoints - 1; i++) {
+        H(i,i)     = -2 * coeff;
+        H(i,i+1)   =  1 * coeff;
+        H(i+1,i)   =  1 * coeff;
+    }
+
+    H(npoints-1, npoints-1) = -2 * coeff;
+
+    for (int i = 0; i < npoints; i++) {
+        H(i,i) += -1.0 / r[i];
+    }
+
+    auto [eH, VH] = jacobi(H);
+
+    return eH[0]; // ground state
+}
+
 // main program
 int main(){ 
     using namespace std;
@@ -60,48 +89,129 @@ int main(){
     A.print(); // assuming you have this
 
     // 2. Run Jacobi diagonalization
-    auto [w, V] = jacobi(A);
+    auto [wA, VA] = jacobi(A);
 
     // 3. Print eigenvalues
     cout << "\nEigenvalues:\n";
-    for(int i=0;i<w.size();i++){
-        cout << w[i] << " ";
+    for(int i=0;i<wA.size();i++){
+        cout << wA[i] << " ";
     }
     cout << endl;
 
     // 4. Print eigenvectors
     cout << "\nEigenvector matrix V:\n";
-    V.print();
+    VA.print();
 
     // check of  VTAV==D, VDVT==A, VTV==1, VVT==1
     
-    pp::matrix D(V.size1(), V.size2());
+    pp::matrix D(VA.size1(), VA.size2());
 
-    for (int i = 0; i < w.size(); i++) {
-        D(i,i) = w[i];
+    for (int i = 0; i < wA.size(); i++) {
+        D(i,i) = wA[i];
     }
 
     // Calculate
 
     std::cout << "Check of EVD, 1 means true" << "\n";
 
-    auto VT = transpose(V);
-    auto left = VT * A * V;
-
+    auto VT = transpose(VA);
+    auto left = VT * A * VA;
     std::cout << "VTAV == D: " << approx_equal(left, D) << "\n";
 
-    auto right = V * D * VT;
-
+    auto right = VA * D * VT;
     std::cout << "VDVT == A: " << approx_equal(right, A) << "\n";
 
-    auto I1 = VT * V;
-    pp::matrix I = identity_matrix(V.size1()); // you need this
-
+    auto I1 = VT * VA;
+    pp::matrix I = identity_matrix(VA.size1()); // you need this
     std::cout << "VTV == I: " << approx_equal(I1, I) << "\n";
 
-    auto I2 = V * VT;
-
+    auto I2 = VA * VT;
     std::cout << "VVT == I: " << approx_equal(I2, I) << "\n";
+
+    // Assignment B (3 points)
+
+    std::cout << "\n" << "Hydrogen atom s-wave radial Schrödinger equation on a grid" << "\n";
+
+    // double rmax = 10;
+    // double dr = 0.1;
+
+
+    std::ofstream out1("energy_vs_dr.dat");
+
+    double rmax = 10.0;
+
+    for (double dr = 0.05; dr <= 0.5; dr += 0.01) {
+        double E0 = ground_state_energy(rmax, dr);
+        out1 << dr << " " << E0 << "\n";
+    }
+
+    std::ofstream out2("energy_vs_rmax.dat");
+
+    double dr = 0.1;
+
+    for (double rmax = 2.0; rmax <= 20.0; rmax += 0.5) {
+        double E0 = ground_state_energy(rmax, dr);
+        out2 << rmax << " " << E0 << "\n";
+    }
+
+
+    // int npoints = (int)(rmax/dr) - 1;
+    
+    // pp::vector r(npoints);
+    // for (int i = 0; i<npoints; i++) {
+    //     r[i] = dr * (i + 1); // Skip r=0
+    // }
+
+    // // Hamiltonian
+
+    // pp::matrix H(npoints, npoints);
+
+    // double coeff = -0.5 / (dr * dr);
+
+    // for (int i = 0; i < npoints - 1; i++) {
+    //     H(i,i)     = -2 * coeff;
+    //     H(i,i+1)   =  1 * coeff;
+    //     H(i+1,i)   =  1 * coeff;
+    // }
+
+    // // last diagonal element
+    // H(npoints-1, npoints-1) = -2 * coeff;
+
+    // for (int i = 0; i < npoints; i++) {
+    //     H(i,i) += -1.0 / r[i];
+    // }
+
+    // // Diagonalize 
+
+    // auto [eH, VH] = jacobi(H);    
+
+    // //Finding eigenvalue
+
+    // std::cout << "Finding groundstate eigenvalue (expected 1)" << "\n";
+
+    // double E0 = eH[0];
+    // std::cout << "Ground state energy: " << E0 << "\n";
+
+    // // Wavefunction
+
+    // pp::vector f0(npoints);
+
+    // double norm = 1.0 / sqrt(dr);
+
+    // for (int i = 0; i < npoints; i++) {
+    //     f0[i] = norm * VH(i,0);
+    // }
+
+    // // Output for plotting
+
+    // std::ofstream out("wavefunction.dat");
+    // if (!out) {
+    //     std::cerr << "Failed to open wavefunction.dat\n";
+    // }
+
+    // for (int i = 0; i < npoints; i++) {
+    //     out << r[i] << " " << f0[i] << "\n";
+    // }
 
     return 0;
 }

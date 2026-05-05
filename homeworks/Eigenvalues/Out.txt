@@ -17,3 +17,5 @@ VTAV == D: 1
 VDVT == A: 1
 VTV == I: 1
 VVT == I: 1
+
+Hydrogen atom s-wave radial Schrödinger equation on a grid
