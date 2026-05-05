@@ -18,8 +18,16 @@ vec.o: vec.cc vec.h
 EVD.o: EVD.cc EVD.h matrix.h vec.h
 
 clean:
-	rm -f *.o main
+	rm -f *.o main wavefunction.dat
 
+test:
+	./main
+
+waves:
+	gnuplot waves.gp
+	@echo "Saved → fig_waves.png"
+
+plots: waves
 
 
 

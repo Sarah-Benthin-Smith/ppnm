@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <chrono>
+#include <cmath>
 
 #include "matrix.h"
 #include "EVD.h"
@@ -42,6 +43,10 @@ pp::matrix identity_matrix(int n) {
     }
 
     return I;
+}
+
+double psi0(double x){
+    return 2*x*std::exp(-x);
 }
 
 double ground_state_energy(double rmax, double dr) {
@@ -132,10 +137,6 @@ int main(){
 
     std::cout << "\n" << "Hydrogen atom s-wave radial Schrödinger equation on a grid" << "\n";
 
-    // double rmax = 10;
-    // double dr = 0.1;
-
-
     std::ofstream out1("energy_vs_dr.dat");
 
     double rmax = 10.0;
@@ -154,64 +155,92 @@ int main(){
         out2 << rmax << " " << E0 << "\n";
     }
 
-
-    // int npoints = (int)(rmax/dr) - 1;
+// Plotting different wavefunctions
+    int npoints = (int)(rmax/dr) - 1;
     
-    // pp::vector r(npoints);
-    // for (int i = 0; i<npoints; i++) {
-    //     r[i] = dr * (i + 1); // Skip r=0
-    // }
+    pp::vector r(npoints);
+    for (int i = 0; i<npoints; i++) {
+        r[i] = dr * (i + 1); // Skip r=0
+    }
 
-    // // Hamiltonian
+// Hamiltonian
+    pp::matrix H(npoints, npoints);
 
-    // pp::matrix H(npoints, npoints);
+    double coeff = -0.5 / (dr * dr);
 
-    // double coeff = -0.5 / (dr * dr);
+    for (int i = 0; i < npoints - 1; i++) {
+        H(i,i)     = -2 * coeff;
+        H(i,i+1)   =  1 * coeff;
+        H(i+1,i)   =  1 * coeff;
+    }
 
-    // for (int i = 0; i < npoints - 1; i++) {
-    //     H(i,i)     = -2 * coeff;
-    //     H(i,i+1)   =  1 * coeff;
-    //     H(i+1,i)   =  1 * coeff;
-    // }
+// last diagonal element
+    H(npoints-1, npoints-1) = -2 * coeff;
 
-    // // last diagonal element
-    // H(npoints-1, npoints-1) = -2 * coeff;
+    for (int i = 0; i < npoints; i++) {
+        H(i,i) += -1.0 / r[i];
+    }
 
-    // for (int i = 0; i < npoints; i++) {
-    //     H(i,i) += -1.0 / r[i];
-    // }
+// Diagonalize 
+    auto [eH, VH] = jacobi(H);    
 
-    // // Diagonalize 
+//Finding eigenvalue
 
-    // auto [eH, VH] = jacobi(H);    
+    std::cout << "Finding groundstate eigenvalue (expected -0.5)" << "\n";
 
-    // //Finding eigenvalue
+    double E0 = eH[0];
+    std::cout << "Ground state energy: " << E0 << "\n";
 
-    // std::cout << "Finding groundstate eigenvalue (expected 1)" << "\n";
+// Wavefunction
 
-    // double E0 = eH[0];
-    // std::cout << "Ground state energy: " << E0 << "\n";
+    double norm = 1.0 / sqrt(dr);
 
-    // // Wavefunction
+    pp::vector f0(npoints); // Ground state
 
-    // pp::vector f0(npoints);
+    for (int i = 0; i < npoints; i++) {
+        f0[i] = norm * VH(i,0);
+    }
 
-    // double norm = 1.0 / sqrt(dr);
+    pp::vector f1(npoints); // First excited state
 
-    // for (int i = 0; i < npoints; i++) {
-    //     f0[i] = norm * VH(i,0);
-    // }
+    for (int i = 0; i < npoints; i++) {
+        f1[i] = norm * VH(i,1);
+    }
 
-    // // Output for plotting
+    pp::vector f2(npoints); // Second excited state
 
-    // std::ofstream out("wavefunction.dat");
-    // if (!out) {
-    //     std::cerr << "Failed to open wavefunction.dat\n";
-    // }
+    for (int i = 0; i < npoints; i++) {
+        f2[i] = norm * VH(i,2);
+    }
 
-    // for (int i = 0; i < npoints; i++) {
-    //     out << r[i] << " " << f0[i] << "\n";
-    // }
+    // Analytical 
+
+    std::cout << std::scientific;
+
+    double psi0(double x);
+
+    double dx = 0.1;
+    double xmin = 0;
+    double xmax = 10;
+
+    for(double x = xmin; x <= xmax; x += dx){
+        std::cout << x << " "
+                << psi0(x) << "\n";
+    }
+
+// Output for plotting
+
+    std::ofstream out("wavefunction.dat");
+
+    out << "# r f0 f1 f2 analytical \n";
+
+    for (int i = 0; i < npoints; i++) {
+        out << r[i] << " " 
+            << f0[i] << " " 
+            << f1[i] << " " 
+            << f2[i] << " "
+            << psi0(r[i]) << "\n";
+    }
 
     return 0;
 }
