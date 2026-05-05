@@ -45,10 +45,6 @@ pp::matrix identity_matrix(int n) {
     return I;
 }
 
-double psi0(double x){
-    return 2*x*std::exp(-x);
-}
-
 double ground_state_energy(double rmax, double dr) {
     int npoints = (int)(rmax / dr) - 1;
 
@@ -213,33 +209,17 @@ int main(){
         f2[i] = norm * VH(i,2);
     }
 
-    // Analytical 
-
-    std::cout << std::scientific;
-
-    double psi0(double x);
-
-    double dx = 0.1;
-    double xmin = 0;
-    double xmax = 10;
-
-    for(double x = xmin; x <= xmax; x += dx){
-        std::cout << x << " "
-                << psi0(x) << "\n";
-    }
-
 // Output for plotting
 
     std::ofstream out("wavefunction.dat");
 
-    out << "# r f0 f1 f2 analytical \n";
+    out << "# r f0 f1 f2 \n";
 
     for (int i = 0; i < npoints; i++) {
         out << r[i] << " " 
             << f0[i] << " " 
             << f1[i] << " " 
-            << f2[i] << " "
-            << psi0(r[i]) << "\n";
+            << f2[i] << "\n";
     }
 
     return 0;
