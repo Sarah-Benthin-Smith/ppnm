@@ -244,7 +244,7 @@ int main(){
 
     std::ofstream timeout("timing.dat");
 
-    for (int n = 10; n <= 200; n += 10) {
+    for (int n = 50; n <= 500; n += 50) {
 
         pp::matrix A = random_symmetric_matrix(n);
 

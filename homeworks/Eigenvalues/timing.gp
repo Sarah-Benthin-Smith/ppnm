@@ -8,6 +8,9 @@ set key box
 
 set samples 500   # smoother analytic curve
 
+a = 1e-9
+b = 3
+
 f(x) = a*x**b
 fit f(x) "timing.dat" using 1:2 via a,b
 
