@@ -8,7 +8,8 @@ set key box
 
 set samples 500   # smoother analytic curve
 
-plot "timing.dat" using 1:2 with lines lw 2 lc rgb "#6A0DAD" title "Ground state"
-
 f(x) = a*x**b
 fit f(x) "timing.dat" using 1:2 via a,b
+
+plot "timing.dat" using 1:2 with lines lw 2 lc rgb "#6A0DAD" title "Data", \
+     f(x) with lines lw 2 lc rgb "#e67c22" title sprintf("Fit: %.3f x^{%.3f}", a, b)
