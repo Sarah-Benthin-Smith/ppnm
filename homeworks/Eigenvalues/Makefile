@@ -27,8 +27,15 @@ waves:
 	gnuplot waves.gp
 	@echo "Saved → fig_waves.png"
 
-plots: waves
+timing:
+	gnuplot timing.gp
+	@echo "Saved → fig_timing.png"
 
+plots: waves, timing
+
+plot:
+	./main
+	gnuplot timing.gp
 
 
 

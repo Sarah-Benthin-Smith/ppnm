@@ -11,6 +11,24 @@
 
 using namespace pp;
 
+// Random symmetric matrices
+pp::matrix random_symmetric_matrix(int n) {
+    pp::matrix A(n,n);
+    std::mt19937 rng(42);
+    std::uniform_real_distribution<double> dist(0.0,1.0);
+
+    for (int i = 0; i < n; i++) {
+        for (int j = i; j < n; j++) {
+
+            double x = dist(rng);
+
+            A(i,j) = x;
+            A(j,i) = x;
+        }
+    }
+    return A;
+}
+
 
 
 // Matrix comparison
@@ -211,15 +229,36 @@ int main(){
 
 // Output for plotting
 
-    std::ofstream out("wavefunction.dat");
+    std::ofstream waveout("wavefunction.dat");
 
-    out << "# r f0 f1 f2 \n";
+    waveout << "# r f0 f1 f2 \n";
 
     for (int i = 0; i < npoints; i++) {
-        out << r[i] << " " 
+        waveout << r[i] << " " 
             << f0[i] << " " 
             << f1[i] << " " 
             << f2[i] << "\n";
+    }
+
+// Timing
+
+    std::ofstream timeout("timing.dat");
+
+    for (int n = 10; n <= 200; n += 10) {
+
+        pp::matrix A = random_symmetric_matrix(n);
+
+        auto start = std::chrono::high_resolution_clock::now();
+        auto [e, V] = jacobi(A);
+        auto stop = std::chrono::high_resolution_clock::now();
+
+        std::chrono::duration<double> elapsed = stop - start;
+        std::cout << "n = "
+                << n
+                << " time = "
+                << elapsed.count()
+                << " seconds\n";
+        timeout << n << " " << elapsed.count() << "\n";
     }
 
     return 0;
