@@ -1,0 +1,12 @@
+set terminal pdfcairo enhanced font "Times,12" size 10cm,7cm
+set output 'fig_decay.pdf'
+
+set xlabel "Time (days)"
+set ylabel "Activity"
+set title "Radioactive decay of ThX"
+set grid lw 1 dt 2
+set key box
+
+plot \
+"data.txt" using 1:2:3 with yerrorbars lc rgb "#6A0DAD" title "Experimental data", \
+"fit.txt" using 1:2 with lines lc rgb "#cb730e" title "Exponential fit"

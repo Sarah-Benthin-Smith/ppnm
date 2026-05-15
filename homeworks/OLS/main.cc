@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cmath>
-
+#include <fstream>
 #include "lsfit.h"
 
 int main(){
@@ -44,4 +44,25 @@ int main(){
     std::cout << "a = " << a << "\n";
     std::cout << "lambda = " << lambda << "\n";
     std::cout << "Half-life = " << T12 << " days\n";
+
+    std::ofstream datafile("data.txt");
+
+    for(int i=0;i<9;i++){
+        datafile
+            << t[i]  << " "
+            << y[i]  << " "
+            << dy[i] << "\n";
+    }
+
+    std::ofstream fitfile("fit.txt");
+
+    for(double z=0; z<=16; z+=0.1){
+
+        double fit = a*std::exp(-lambda*z);
+
+        fitfile
+            << z << " "
+            << fit << "\n";
+    }
+
 }
