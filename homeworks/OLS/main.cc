@@ -77,10 +77,10 @@ int main(){
         double a_mp = exp(c0 - dc0);
         double a_mm = exp(c0 - dc0);
 
-        double lambda_pp = -(c1 + dc1);
-        double lambda_pm = -(c1 - dc1);
-        double lambda_mp = -(c1 + dc1);
-        double lambda_mm = -(c1 - dc1);
+        double lambda_pp = (c1 + dc1);
+        double lambda_pm = (c1 - dc1);
+        double lambda_mp = (c1 + dc1);
+        double lambda_mm = (c1 - dc1);
 
         double y_pp = a_pp * exp(-lambda_pp * tt);
         double y_pm = a_pm * exp(-lambda_pm * tt);
