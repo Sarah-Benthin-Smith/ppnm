@@ -36,21 +36,21 @@ int main(){
     auto [c,Cov] = lsfit(fs,t,Y,dY);
 
 
-    double ln_a   = c[0];
-    double lambda = -c[1];
+    double c0 = c[0];
+    double c1 = -c[1];
 
-    double d_ln_a   = std::sqrt(Cov(0,0));
-    double d_lambda = std::sqrt(Cov(1,1));
+    double dc0 = std::sqrt(Cov(0,0));
+    double dc1 = std::sqrt(Cov(1,1));
 
-    double a = exp(ln_a);
+    double a = exp(c0);
 
-    double T12  = log(2.0)/lambda;
+    double T12  = log(2.0)/c1;
 
     double dT12 =
-        log(2.0)/(lambda*lambda)*d_lambda;
+        log(2.0)/(c1*c1)*dc1;
 
     std::cout << "a = " << a << "\n";
-    std::cout << "lambda = " << lambda << "+/-" << d_lambda << "\n";
+    std::cout << "lambda = " << c1 << "+/-" << dc1 << "\n";
     std::cout << "Half-life = " << T12 << "+/-" << dT12 << " days\n";
     std::cout << "Modern Value = 3.6316 days\n";
     std::cout << "No it does not agree with the modern value\n";
@@ -63,39 +63,73 @@ int main(){
             << y[i]  << " "
             << dy[i] << "\n";
     }
+    
+    std::ofstream fitout("fit.dat");
 
-    std::ofstream fitfile("fit.txt");
+    for(double tt=0; tt<=15; tt+=0.1){
 
-    for(double z=0; z<=16; z+=0.1){
+        // best fit
+        double yfit = a * exp(-c1 * tt);
 
-        double fit = a*std::exp(-lambda*z);
+        // combinations
+        double a_pp = exp(c0 + dc0);
+        double a_pm = exp(c0 + dc0);
+        double a_mp = exp(c0 - dc0);
+        double a_mm = exp(c0 - dc0);
 
-        fitfile
-            << z << " "
-            << fit << "\n";
+        double lambda_pp = -(c1 + dc1);
+        double lambda_pm = -(c1 - dc1);
+        double lambda_mp = -(c1 + dc1);
+        double lambda_mm = -(c1 - dc1);
+
+        double y_pp = a_pp * exp(-lambda_pp * tt);
+        double y_pm = a_pm * exp(-lambda_pm * tt);
+        double y_mp = a_mp * exp(-lambda_mp * tt);
+        double y_mm = a_mm * exp(-lambda_mm * tt);
+
+        // envelope (min/max)
+        double y_max = std::max({y_pp, y_pm, y_mp, y_mm});
+        double y_min = std::min({y_pp, y_pm, y_mp, y_mm});
+
+        fitout << tt << " " << yfit << " " << y_min << " " << y_max << "\n";
     }
 
-    std::ofstream f("fit_band.txt");
+    fitout.close();
 
-    for(double t=0; t<=16; t+=0.1){
-
-        auto F = [&](double LN_A, double Lambda){
-            return LN_A*std::exp(-Lambda*t);
-        };
-
-        double f0 = F(ln_a, lambda);
-
-        double fpp = F(ln_a+d_ln_a, lambda+d_lambda);
-        double fpm = F(ln_a+d_ln_a, lambda-d_lambda);
-        double fmp = F(ln_a-d_ln_a, lambda+d_lambda);
-        double fmm = F(ln_a-d_ln_a, lambda-d_lambda);
-
-        f << t << " "
-        << f0  << " "
-        << fpp << " "
-        << fpm << " "
-        << fmp << " "
-        << fmm << "\n";
-    }
+    return 0;
 
 }
+
+    // std::ofstream fitfile("fit.txt");
+
+    // for(double z=0; z<=16; z+=0.1){
+
+    //     double fit = a*std::exp(-lambda*z);
+
+    //     fitfile
+    //         << z << " "
+    //         << fit << "\n";
+    // }
+
+    // std::ofstream f("fit_band.txt");
+
+    // for(double t=0; t<=16; t+=0.1){
+
+    //     auto F = [&](double LN_A, double Lambda){
+    //         return LN_A*std::exp(-Lambda*t);
+    //     };
+
+    //     double f0 = F(ln_a, lambda);
+
+    //     double fpp = F(ln_a+d_ln_a, lambda+d_lambda);
+    //     double fpm = F(ln_a+d_ln_a, lambda-d_lambda);
+    //     double fmp = F(ln_a-d_ln_a, lambda+d_lambda);
+    //     double fmm = F(ln_a-d_ln_a, lambda-d_lambda);
+
+    //     f << t << " "
+    //     << f0  << " "
+    //     << fpp << " "
+    //     << fpm << " "
+    //     << fmp << " "
+    //     << fmm << "\n";
+    // }
