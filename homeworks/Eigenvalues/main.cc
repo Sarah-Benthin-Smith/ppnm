@@ -105,7 +105,7 @@ int main(){
     A(2,0)=1;  A(2,1)=0;  A(2,2)=2;
 
     cout << "Input matrix A:\n";
-    A.print(); // assuming you have this
+    A.print(); 
 
     // 2. Run Jacobi diagonalization
     auto [wA, VA] = jacobi(A);
