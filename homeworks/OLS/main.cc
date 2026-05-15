@@ -49,11 +49,13 @@ int main(){
     double dT12 =
         log(2.0)/(c1*c1)*dc1;
 
-    std::cout << "a = " << a << "\n";
-    std::cout << "lambda = " << c1 << "+/-" << dc1 << "\n";
-    std::cout << "Half-life = " << T12 << "+/-" << dT12 << " days\n";
-    std::cout << "Modern Value = 3.6316 days\n";
-    std::cout << "No it does not agree with the modern value\n";
+
+    std::ofstream pout("Out.txt");
+
+    pout << "a = " << a << "\n";
+    pout << "lambda = " << c1 << "+/-" << dc1 << "\n";
+    pout << "Half-life = " << T12 << "+/-" << dT12 << " days\n";
+    pout << "Modern Value = 3.6316 days\n";
 
     std::ofstream datafile("data.txt");
 
