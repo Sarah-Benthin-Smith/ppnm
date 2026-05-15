@@ -8,6 +8,6 @@ set grid lw 1 dt 2
 set key box
 
 plot \
-"data.txt" using 1:2:3 with yerrorbars lc rgb "#6A0DAD" title "Experimental data", \
+"fit.dat" using 1:3:4 with filledcurves fs solid 1 lc rgb "#e72bd7" title "Exponential fit band", \
 "fit.dat" using 1:2 with lines lc rgb "#cb730e" title "Exponential fit", \
-"fit.dat" using 1:3:4 with filledcurves fs solid 1 lc rgb "#e72bd7" title "Exponential fit band"
+"data.txt" using 1:2:3 with yerrorbars lc rgb "#6A0DAD" title "Experimental data"
