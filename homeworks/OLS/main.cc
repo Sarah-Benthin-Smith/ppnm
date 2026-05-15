@@ -80,7 +80,7 @@ int main(){
     for(double t=0; t<=16; t+=0.1){
 
         auto F = [&](double LN_A, double Lambda){
-            return std::exp(LN_A + Lambda*t);
+            return LN_A*std::exp(-Lambda*t);
         };
 
         double f0 = F(ln_a, lambda);
