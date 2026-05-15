@@ -21,7 +21,7 @@ int main(int argc,char** argv){
 		std::cout<<x<<" "<<funcs::erf(x)<<" "<<funcs::sgamma(x)<<" "<<funcs::lngamma(x)<<"\n";
 	}
     // std::cout << x << " "
-    //       << funcs::erf(x) << " "
+    //       << funcs::erf(x) << " "  
     //       << std::sin(x) << "\n";
 	return 0;
 }
