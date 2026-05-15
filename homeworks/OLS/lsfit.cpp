@@ -1,6 +1,7 @@
 #include "lsfit.h"
 
-pp::vector lsfit(
+std::tuple<pp::vector,pp::matrix>
+lsfit(
     const std::vector<func>& fs,
     const pp::vector& x,
     const pp::vector& y,
@@ -10,7 +11,6 @@ pp::vector lsfit(
     int m = fs.size();
 
     pp::matrix A(n,m);
-
     pp::vector b(n);
 
     for(int i=0;i<n;i++){
@@ -26,5 +26,22 @@ pp::vector lsfit(
 
     pp::vector c = qr.solve(b);
 
-    return c;
+    // covariance matrix
+    pp::matrix Rinv = qr.inverse();
+
+    pp::matrix Cov(m,m);
+
+    for(int i=0;i<m;i++){
+        for(int j=0;j<m;j++){
+
+            double sum = 0;
+
+            for(int k=0;k<m;k++)
+                sum += Rinv(i,k)*Rinv(j,k);
+
+            Cov(i,j)=sum;
+        }
+    }
+
+    return {c,Cov};
 }

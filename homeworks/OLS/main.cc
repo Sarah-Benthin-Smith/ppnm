@@ -32,18 +32,28 @@ int main(){
         [](double x){ return x; }
     };
 
-    pp::vector c = lsfit(fs,t,Y,dY);
+    // pp::vector c = lsfit(fs,t,Y,dY);
+    auto [c,Cov] = lsfit(fs,t,Y,dY);
+
 
     double ln_a   = c[0];
     double lambda = -c[1];
 
+    double d_ln_a   = std::sqrt(Cov(0,0));
+    double d_lambda = std::sqrt(Cov(1,1));
+
     double a = exp(ln_a);
 
-    double T12 = log(2.0)/lambda;
+    double T12  = log(2.0)/lambda;
+
+    double dT12 =
+        log(2.0)/(lambda*lambda)*d_lambda;
 
     std::cout << "a = " << a << "\n";
-    std::cout << "lambda = " << lambda << "\n";
-    std::cout << "Half-life = " << T12 << " days\n";
+    std::cout << "lambda = " << lambda << "+/-" << d_lambda << "\n";
+    std::cout << "Half-life = " << T12 << "+/-" << dT12 << " days\n";
+    std::cout << "Modern Value = 3.6316 days\n";
+    std::cout << "No it does not agree with the modern value\n";
 
     std::ofstream datafile("data.txt");
 
@@ -63,6 +73,29 @@ int main(){
         fitfile
             << z << " "
             << fit << "\n";
+    }
+
+    std::ofstream f("fit_band.txt");
+
+    for(double t=0; t<=16; t+=0.1){
+
+        auto F = [&](double LN_A, double Lambda){
+            return std::exp(LN_A + Lambda*t);
+        };
+
+        double f0 = F(ln_a, lambda);
+
+        double fpp = F(ln_a+d_ln_a, lambda+d_lambda);
+        double fpm = F(ln_a+d_ln_a, lambda-d_lambda);
+        double fmp = F(ln_a-d_ln_a, lambda+d_lambda);
+        double fmm = F(ln_a-d_ln_a, lambda-d_lambda);
+
+        f << t << " "
+        << f0  << " "
+        << fpp << " "
+        << fpm << " "
+        << fmp << " "
+        << fmm << "\n";
     }
 
 }
