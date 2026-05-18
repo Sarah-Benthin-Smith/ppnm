@@ -3,6 +3,7 @@
 #include <fstream>
 #include "vec.h"
 
+
 // Binær søgning: her bliver i fundet så x[i] <= z <= x[i+1]
 
 int binsearch(const vector& x, double z)
@@ -53,3 +54,4 @@ double linterpInteg(const vector& x, const vector& y, double z) {
     
     return integral;
 }
+

@@ -1,9 +1,9 @@
-CXXFLAGS = -Wall -O2 -std=c++11
+CXXFLAGS = -Wall -O2 -std=c++14
 
 all: main plot
 
-main: main.cc lspline.cc vec.h
-	$(CXX) $(CXXFLAGS) main.cc lspline.cc -o main
+main: main.cc lspline.cc qspline.cc
+	$(CXX) $(CXXFLAGS) main.cc lspline.cc qspline.cc -o main
 
 plot: main
 	./main

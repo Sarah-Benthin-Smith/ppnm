@@ -1,6 +1,9 @@
 #include <cstdio>
 #include <cmath>
+#include <iostream>
+#include <fstream>
 #include "vec.h"
+#include "qspline.h"
 
 // Deklarationer fra Ispline.cc
 double linterp(const vector& x, const vector& y, double z);
@@ -46,5 +49,48 @@ int main() {
     
     printf("Data gemt i interp.data, integ.data og points.data\n");
     
+    int n1 = 5;
+    vector x1(n1), y1(n1);
+
+    for(int i = 0; i < n1; i++) {
+        x1[i] = i + 1;
+        y1[i] = 1.0;
+    }
+
+    auto f = make_qspline(x1, y1);
+
+    std::ofstream file("Out.txt");
+
+    file << "Flat function, should only be 1's" << "\n";
+
+    for(double z1 = 1; z1 <= 5; z1 += 0.5) {
+        file << z1 << " " << f(z1) << "\n";
+    }
+
+    for(int i = 0; i < n1; i++) {
+    x1[i] = i + 1;
+    y1[i] = x1[i];
+    }
+    
+    auto f1 = make_qspline(x1, y1);
+
+    file << "Linear function" << "\n";
+    for(double z = 1; z <= 5; z += 0.5) {
+        file << z << " " << f1(z) << "\n";
+    }
+    double a = f1(2.0);
+
+    x1[0] = 999;  
+    y1[0] = 999;
+
+    file << "Test of moving the function, should be the same as before:" << "\n";
+    for(double z = 1; z <= 5; z += 0.5) {
+        file << z << " " << f1(z) << "\n";
+    }
+
+    double b = f1(2.0);
+
+    file << "testing of move with a certain value: Before move f(2.0) = " << a << " After move f(2.0) = " << b << "\n";
+
     return 0;
 }
