@@ -23,6 +23,11 @@ plot: main
 	set xlabel "x"; set ylabel "y"; \
 	plot "out.data" using 1:2 with lines lw 3 lc rgb "#6A0DAD" title "numerical", \
 	     "out.data" using 1:3 with lines lw 3 dt 2 lc rgb "#e67c22" title "eksakt"; \
+	set output "example_pend.svg"; \
+	set title "Solving example pendulum"; \
+	set xlabel "x"; set ylabel "y"; \
+	plot "pendulum.data" using 1:2 with lines lw 3 lc rgb "#6A0DAD" title "theta(t)", \
+	     "pendulum.data" using 1:3 with lines lw 3 dt 2 lc rgb "#e67c22" title "omega(t)"; \
 	' | gnuplot
 
 
