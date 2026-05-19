@@ -35,21 +35,36 @@ vector pend(double t, vector y1){ // Pendulum assignment
     return dydt;
 }
 
-vector orbit(double phi, vector y2){ // Assignment b for 3 points
-    (void)phi;
+// vector orbit(double phi, vector y2, double eps){ // Assignment b for 3 points
+//     (void)phi;
 
-    double eps = 0.01;
+//     vector dydphi(2);
 
-    vector dydphi(2);
+//     double u = y2[0];
+//     double up = y2[1];
 
-    double u = y2[0];
-    double up = y2[1];
+//     dydphi[0] = up;
+//     dydphi[1] = 1.0 - u + eps*u*u;
 
-    dydphi[0] = up;
-    dydphi[1] = 1.0 - u + eps*u*u;
+//     return dydphi;
+// }
 
-    return dydphi;
-}
+auto orbit = [](double eps){
+    return [eps](double phi, vector y2){
+
+        (void)phi;
+
+        vector dydphi(2);
+
+        double u  = y2[0];
+        double up = y2[1];
+
+        dydphi[0] = up;
+        dydphi[1] = 1.0 - u + eps*u*u;
+
+        return dydphi;
+    };
+};
 
 int main(){
 
@@ -98,29 +113,19 @@ int main(){
                 << ys1[i][1] << "\n"; // omega
     }
 
+    auto f_circ = orbit(0.0);
+    auto f_ell = orbit(0.0);
+    auto f_rel = orbit(0.01);
 
     // Orbit assignment
-    vector y20(2); // Circular
+    vector y20(2); // Circular (epsilon should be 0)
     y20[0] = 1.0;
     y20[1] = 0.0;
     auto [phis, ys2] = driver(
-        orbit,
+        f_circ,
         0.0,
         50.0,     // many rotations
         y20,
-        0.05,
-        1e-5,
-        1e-5
-    );
-
-    vector y20_(2); // Elliptical
-    y20_[0] = 1.0;
-    y20_[1] = -0.5;
-    auto [phis_, ys2_] = driver(
-        orbit,
-        0.0,
-        50.0,     // many rotations
-        y20_,
         0.05,
         1e-5,
         1e-5
@@ -142,21 +147,63 @@ int main(){
         orout << x2 << " " << y2 << "\n";
     }
 
+    vector y20e(2); // Elliptical (epsilon should be 0)
+    y20e[0] = 1.0;
+    y20e[1] = -0.5;
+    auto [phise, ys2e] = driver(
+        f_ell,
+        0.0,
+        50.0,     // many rotations
+        y20e,
+        0.05,
+        1e-5,
+        1e-5
+    );
+
     std::ofstream epsout("orbit_eps.data");
 
-    for(size_t i=0;i<phis_.size();i++){
+    for(size_t i=0;i<phise.size();i++){
 
         // Elliptical
-        double phi_ = phis_[i];
-        double u_   = ys2_[i][0];
+        double phie = phise[i];
+        double ue   = ys2e[i][0];
 
-        double r_ = 1.0/u_;
+        double re = 1.0/ue;
 
-        double x2_ = r_ * cos(phi_);
-        double y2_ = r_ * sin(phi_);
+        double x2e = re * cos(phie);
+        double y2e = re * sin(phie);
 
-        epsout << x2_ << " " << y2_ << "\n";
-    }        
+        epsout << x2e << " " << y2e << "\n";
+    }  
+
+    vector y20r(2); // Relativistic (Epsilon should be 0.01)
+    y20r[0] = 1.0;
+    y20r[1] = -0.5;
+    auto [phisr, ys2r] = driver(
+        f_rel,
+        0.0,
+        50.0,     // many rotations
+        y20r,
+        0.05,
+        1e-5,
+        1e-5
+    );
+
+    std::ofstream relout("orbit_rel.data");
+
+    for(size_t i=0;i<phisr.size();i++){
+
+        // Elliptical
+        double phir = phisr[i];
+        double ur   = ys2r[i][0];
+
+        double rr = 1.0/ur;
+
+        double x2r = rr * cos(phir);
+        double y2r = rr * sin(phir);
+
+        relout << x2r << " " << y2r << "\n";
+    }  
 
     return 0;
 }

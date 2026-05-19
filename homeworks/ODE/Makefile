@@ -32,7 +32,8 @@ plot: main
 	set title "Orbits"; \
 	set xlabel "x"; set ylabel "y"; \
 	plot "orbit_eps.data" using 1:2 with lines lw 3 lc rgb "#6A0DAD" title "Elliptical orbit", \
-	     "orbit_cir.data" using 1:2 with lines lw 3 dt 2 lc rgb "#e67c22" title "Circular orbit"; \
+		 "orbit_rel.data" using 1:2 with lines lw 3 lc rgb "#b72ab0" title "Relativistic orbit", \
+	     "orbit_cir.data" using 1:2 with lines lw 3 lc rgb "#e67c22" title "Circular orbit"; \
 	' | gnuplot
 
 
