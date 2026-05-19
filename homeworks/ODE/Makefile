@@ -28,6 +28,11 @@ plot: main
 	set xlabel "x"; set ylabel "y"; \
 	plot "pendulum.data" using 1:2 with lines lw 3 lc rgb "#6A0DAD" title "theta(t)", \
 	     "pendulum.data" using 1:3 with lines lw 3 dt 2 lc rgb "#e67c22" title "omega(t)"; \
+	set output "orbits.svg"; \
+	set title "Orbits"; \
+	set xlabel "x"; set ylabel "y"; \
+	plot "orbit_eps.data" using 1:2 with lines lw 3 lc rgb "#6A0DAD" title "Elliptical orbit", \
+	     "orbit_cir.data" using 1:2 with lines lw 3 dt 2 lc rgb "#e67c22" title "Circular orbit"; \
 	' | gnuplot
 
 
