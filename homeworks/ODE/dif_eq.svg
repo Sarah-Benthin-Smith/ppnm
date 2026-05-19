@@ -98,15 +98,15 @@
 <g fill="none" color="black" stroke="currentColor" stroke-width="1.00" stroke-linecap="butt" stroke-linejoin="miter">
 </g>
 	<g id="gnuplot_plot_1" ><title>numerical</title>
-<g fill="none" color="#FFFFFF" stroke="black" stroke-width="2.00" stroke-linecap="butt" stroke-linejoin="miter">
+<g fill="none" color="#FFFFFF" stroke="black" stroke-width="3.00" stroke-linecap="butt" stroke-linejoin="miter">
 </g>
-<g fill="none" color="black" stroke="currentColor" stroke-width="2.00" stroke-linecap="butt" stroke-linejoin="miter">
+<g fill="none" color="black" stroke="currentColor" stroke-width="3.00" stroke-linecap="butt" stroke-linejoin="miter">
 	<g transform="translate(707.09,75.91)" stroke="none" fill="black" font-family="Arial" font-size="12.00"  text-anchor="end">
 		<text><tspan font-family="Arial" >numerical</tspan></text>
 	</g>
 </g>
-<g fill="none" color="black" stroke="currentColor" stroke-width="2.00" stroke-linecap="butt" stroke-linejoin="miter">
-	<path stroke='rgb(148,   0, 211)'  d='M715.48,72.01 L758.04,72.01 M72.53,54.01 L72.84,54.02 L73.14,54.05 L73.44,54.09 L73.73,54.15 L74.02,54.23
+<g fill="none" color="black" stroke="currentColor" stroke-width="3.00" stroke-linecap="butt" stroke-linejoin="miter">
+	<path stroke='rgb(106,  13, 173)'  d='M715.48,72.01 L758.04,72.01 M72.53,54.01 L72.84,54.02 L73.14,54.05 L73.44,54.09 L73.73,54.15 L74.02,54.23
 		L74.30,54.32 L74.59,54.43 L74.88,54.55 L75.16,54.69 L75.45,54.85 L75.73,55.02 L76.01,55.21 L76.30,55.42
 		L76.58,55.64 L76.87,55.87 L77.15,56.12 L77.44,56.39 L77.72,56.67 L78.00,56.97 L78.29,57.29 L78.57,57.62
 		L78.86,57.96 L79.14,58.33 L79.43,58.70 L79.71,59.10 L79.99,59.51 L80.28,59.93 L80.56,60.37 L80.85,60.83
@@ -418,13 +418,13 @@
 		L774.82,198.60  '/></g>
 	</g>
 	<g id="gnuplot_plot_2" ><title>eksakt</title>
-<g fill="none" color="black" stroke="currentColor" stroke-width="2.00" stroke-linecap="butt" stroke-linejoin="miter">
+<g fill="none" color="black" stroke="currentColor" stroke-width="3.00" stroke-linecap="butt" stroke-linejoin="miter">
 	<g transform="translate(707.09,93.91)" stroke="none" fill="black" font-family="Arial" font-size="12.00"  text-anchor="end">
 		<text><tspan font-family="Arial" >eksakt</tspan></text>
 	</g>
 </g>
-<g fill="none" color="black" stroke="currentColor" stroke-width="2.00" stroke-linecap="butt" stroke-linejoin="miter">
-	<path stroke='rgb(  0, 158, 115)' stroke-dasharray=' 5,8'  d='M715.48,90.01 L758.04,90.01 M72.53,54.01 L72.84,54.02 L73.14,54.05 L73.44,54.09 L73.73,54.15 L74.02,54.23
+<g fill="none" color="black" stroke="currentColor" stroke-width="3.00" stroke-linecap="butt" stroke-linejoin="miter">
+	<path stroke='rgb(230, 124,  34)' stroke-dasharray='7.5,12.0'  d='M715.48,90.01 L758.04,90.01 M72.53,54.01 L72.84,54.02 L73.14,54.05 L73.44,54.09 L73.73,54.15 L74.02,54.23
 		L74.30,54.32 L74.59,54.43 L74.88,54.55 L75.16,54.69 L75.45,54.85 L75.73,55.02 L76.01,55.21 L76.30,55.42
 		L76.58,55.63 L76.87,55.87 L77.15,56.12 L77.44,56.39 L77.72,56.67 L78.00,56.97 L78.29,57.29 L78.57,57.62
 		L78.86,57.96 L79.14,58.33 L79.43,58.70 L79.71,59.10 L79.99,59.51 L80.28,59.93 L80.56,60.37 L80.85,60.83
@@ -735,6 +735,8 @@
 		L772.56,184.38 L772.84,186.14 L773.12,187.90 L773.40,189.66 L773.69,191.44 L773.97,193.22 L774.26,195.01 L774.54,196.80
 		L774.82,198.55  '/></g>
 	</g>
+<g fill="none" color="#FFFFFF" stroke="rgb(230, 124,  34)" stroke-width="2.00" stroke-linecap="butt" stroke-linejoin="miter">
+</g>
 <g fill="none" color="black" stroke="currentColor" stroke-width="2.00" stroke-linecap="butt" stroke-linejoin="miter">
 </g>
 <g fill="none" color="black" stroke="black" stroke-width="1.00" stroke-linecap="butt" stroke-linejoin="miter">
