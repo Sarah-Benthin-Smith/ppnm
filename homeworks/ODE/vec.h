@@ -1,12 +1,15 @@
 #pragma once
 #include <vector>
 #include <cmath>
+#include <initializer_list>
 
 class vector {
 private:
     std::vector<double> data;
 
 public:
+    vector(std::initializer_list<double> list);
+    
     vector(int n);
     int size() const;
 

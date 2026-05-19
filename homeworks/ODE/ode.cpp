@@ -53,5 +53,11 @@ std::tuple<std::vector<double>,std::vector<vector>> driver(
         else
             h *= 2;
 
+        const double hmin = 1e-4;
+        const double hmax = 0.2;
+
+        if(h < hmin) h = hmin;
+        if(h > hmax) h = hmax;
+
     }while(true);
 }

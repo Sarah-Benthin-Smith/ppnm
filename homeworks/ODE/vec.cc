@@ -10,6 +10,10 @@ int vector::size() const{
     return data.size();
 }
 
+vector::vector(std::initializer_list<double> list){
+    data = std::vector<double>(list);
+}
+
 double& vector::operator[](int i){
     return data[i];
 }
