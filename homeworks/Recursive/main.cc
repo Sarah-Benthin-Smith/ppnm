@@ -16,33 +16,25 @@ double call_counter(function<double(double)> f, double x){
     return f(x);
 }
 
-double erf_integral(
-    std::function<double(function<double(double)>,double,double,double,double,double,double)> integrate,
-    double z)
-{
-    const double inv_sqrt_pi = 2.0 / std::sqrt(M_PI);
+double erf_integral(double z, double acc){
 
-    auto I = [&](auto f, double a, double b){
-        return integrate(f, a, b, 1e-6, 1e-6, NAN, NAN);
-    };
+    if(z < 0)
+        return -erf_integral(-z, acc);
 
-    if (z < 0)
-        return -erf_integral(integrate, -z);
-
-    if (z <= 1.0){
-        auto f = [](double x){ return std::exp(-x*x); };
-        return inv_sqrt_pi * I(f, 0.0, z);
+    if(z <= 1){
+        auto f = [](double x){
+            return std::exp(-x*x);
+        };
+        return 2/std::sqrt(M_PI) * integrate(f, 0, z, acc, 0);
     }
-
-    auto f = [z](double t){
-        double u = z + (1.0 - t)/t;
-        return std::exp(-u*u) / (t*t);
-    };
-
-    return 1.0 - inv_sqrt_pi * I(f, 0.0, 1.0);
+    else{
+        auto f = [z](double t){
+            double x = z + (1 - t)/t;
+            return std::exp(-x*x)/(t*t);
+        };
+        return 1 - 2/std::sqrt(M_PI) * integrate(f, 0, 1, acc, 0);
+    }
 }
-
-// double erf_integral(function<double(double)> integrate, double z);
 
 int main(){
 
@@ -107,53 +99,38 @@ int main(){
     }
     txt_file.close();
 
-    ofstream file("erf_data.dat");
+    // ofstream file("erf_data.dat");
 
-    for(double z = -3.0; z <= 3.0; z += 0.05){
+    // for(double z = -3.0; z <= 3.0; z += 0.05){
 
-        auto integ = [](function<double(double)> f, double a, double b,
-                         double acc, double eps,
-                         double f2, double f3){
-            return integrate(f,a,b,acc,eps,f2,f3);
-        };
+    //     auto integ = [](function<double(double)> f, double a, double b,
+    //                      double acc, double eps,
+    //                      double f2, double f3){
+    //         return integrate(f,a,b,acc,eps,f2,f3);
+    //     };
 
-        double val = erf_integral(integ, z);
-        double ref = erf(z); // C++ standard reference
+    //     double val = erf_integral(integ, z);
+    //     double ref = erf(z); // C++ standard reference
 
-        file << z << " " << val << " " << ref << " " << fabs(ref-val) << "\n";
+    //     file << z << " " << val << " " << ref << " " << fabs(ref-val) << "\n";
+    // }
+
+    // file.close();
+
+    double exact = 0.8427007929497148;
+    std::cout << "erf(1) ≈ " << erf_integral(1, 1e-6)
+              << " (exact " << exact << ")\n";
+
+    std::ofstream out("erf_convergence.dat");
+
+    for(double acc = 1e-1; acc >= 1e-8; acc *= 0.1){
+        double val = erf_integral(1.0, acc);
+        double err = std::abs(val - exact);
+
+        out << acc << " " << err << "\n";
     }
 
-    file.close();
-
-    ofstream conv_file("erf_convergence.dat");
-
-    const double exact = 0.84270079294971486934;
-
-    auto f = [](double x){
-        return exp(-x*x);
-    };
-
-    std::function<double(function<double(double)>,double,double,double,double,double,double)> integ =
-        [](function<double(double)> f, double a, double b,
-           double acc, double eps,
-           double f2, double f3)
-    {
-        return integrate(f,a,b,acc,eps,f2,f3);
-    };
-
-    for(double acc = 1e-1; acc >= 1e-10; acc *= 0.1){
-
-        double result = integ(f, 0.0, 1.0, acc, 0.0, NAN, NAN);
-
-        double error = fabs(result - exact);
-
-        conv_file << acc << " " << error << "\n";
-
-        cout << "acc = " << acc
-             << "  error = " << error << endl;
-    }
-
-    conv_file.close();
+    out.close();
 
     return 0;
 }

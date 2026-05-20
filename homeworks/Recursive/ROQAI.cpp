@@ -1,6 +1,9 @@
 #include "ROQAI.h"
 
 #include <cmath>
+#include <algorithm>
+#include <limits>
+
 
 double integrate(
     std::function<double(double)> f,
@@ -40,4 +43,60 @@ double integrate(
                           acc/std::sqrt(2.0), eps,
                           f3, f4);
     }
+}
+
+double integrate_cc(
+    std::function<double(double)> f,
+    double a,
+    double b,
+    double acc,
+    double eps
+){
+    auto g = [f,a,b](double theta){
+        double x = (a+b)/2 + (b-a)/2 * std::cos(theta);
+        return f(x) * std::sin(theta) * (b-a)/2;
+    };
+
+    return integrate(g, 0, M_PI, acc, eps);
+}
+
+double integrate_inf(
+    std::function<double(double)> f,
+    double a,
+    double b,
+    double acc,
+    double eps
+){
+    // (-∞, ∞)
+    if(std::isinf(a) && std::isinf(b)){
+        auto g = [f](double t){
+            double x = t/(1 - t*t);
+            double dxdt = (1 + t*t)/((1 - t*t)*(1 - t*t));
+            return f(x)*dxdt;
+        };
+        return integrate_cc(g, -1, 1, acc, eps);
+    }
+
+    // (a, ∞)
+    if(std::isinf(b)){
+        auto g = [f,a](double t){
+            double x = a + t/(1 - t);
+            double dxdt = 1/((1 - t)*(1 - t));
+            return f(x)*dxdt;
+        };
+        return integrate_cc(g, 0, 1, acc, eps);
+    }
+
+    // (-∞, b)
+    if(std::isinf(a)){
+        auto g = [f,b](double t){
+            double x = b - t/(1 - t);
+            double dxdt = 1/((1 - t)*(1 - t));
+            return f(x)*dxdt;
+        };
+        return integrate_cc(g, 0, 1, acc, eps);
+    }
+
+    // fallback
+    return integrate_cc(f, a, b, acc, eps);
 }
