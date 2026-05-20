@@ -12,11 +12,11 @@ ode.o: ode.cpp
 vec.o: vec.cc
 
 clean:
-	rm -f *.o main out.data
+	rm -f *.o main
 
 plot: main
 	./main
-	gnuplot plot.gp
+	gnuplot orbit.gp threebody.gp 
 
 
 

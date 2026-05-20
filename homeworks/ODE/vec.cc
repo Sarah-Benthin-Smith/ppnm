@@ -84,3 +84,10 @@ vector operator/(const vector& v, double c){
 
     return r;
 }
+
+vector& vector::operator+=(const vector& other){
+    for(size_t i=0;i< data.size();i++){
+        (*this)[i] += other[i];
+    }
+    return *this;
+}
