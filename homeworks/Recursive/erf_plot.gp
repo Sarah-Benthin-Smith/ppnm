@@ -12,8 +12,9 @@ plot \
 
 set output "erf_compare.svg"
 set logscale xy
+set xtics rotate by 45 right
 set size square
-set title "Errorfunction"
+set title "Accuracy of Errorfunction"
 set xlabel "acc"
 set ylabel "absolute error"
 

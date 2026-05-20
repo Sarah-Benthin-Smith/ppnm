@@ -11,6 +11,26 @@ using namespace std;
 
 int ncalls = 0;
 
+auto f2_count = [](double x){
+    ++ncalls;
+    return 1/std::sqrt(x);
+};
+
+auto f4_count = [](double x){
+    ++ncalls;
+    return std::log(x)/std::sqrt(x);
+};
+
+auto f_exp_count = [](double x){
+    ++ncalls;
+    return std::exp(-x);
+};
+
+auto f_gauss_count = [](double x){
+    ++ncalls;
+    return std::exp(-x*x);
+};
+
 double call_counter(function<double(double)> f, double x){
     ncalls++;
     return f(x);
@@ -131,6 +151,58 @@ int main(){
     }
 
     out.close();
+
+    std::ofstream fout("Variable_transformation_quadratures.txt");
+    // Assignment 2
+    ncalls = 0;
+    double I2 = integrate(f2_count,0,1);
+    int calls_normal = ncalls;
+
+    ncalls = 0;
+    double I2_CC = integrate_cc(f2_count,0,1);
+    int calls_cc = ncalls;
+
+    fout << "\nIntegral 1/sqrt(x):\n";
+    fout << "  normal = " << I2 << ", calls = " << calls_normal << "\n";
+    fout << "  CC     = " << I2_CC << ", calls = " << calls_cc << "\n";
+
+    ncalls = 0;
+    double I4 = integrate(f4_count,0,1);
+    calls_normal = ncalls;
+
+    ncalls = 0;
+    double I4_CC = integrate_cc(f4_count,0,1);
+    calls_cc = ncalls;
+
+    fout << "\nIntegral log(x)/sqrt(x):\n";
+    fout << "  normal = " << I4 << ", calls = " << calls_normal << "\n";
+    fout << "  CC     = " << I4_CC << ", calls = " << calls_cc << "\n";
+
+    fout << "\nInfinite interval tests:\n";
+
+    // exp(-x)
+    ncalls = 0;
+    double Iexp = integrate_inf(f_exp_count, 0,
+        std::numeric_limits<double>::infinity(), 1e-6, 1e-6);
+
+    int calls_exp = ncalls;
+
+    fout << "exp(-x) from 0 to ∞ = " << Iexp
+            << " (exact 1), calls = " << calls_exp << "\n";
+
+    // Gaussian
+    ncalls = 0;
+    double Igauss = integrate_inf(f_gauss_count,
+        -std::numeric_limits<double>::infinity(),
+        std::numeric_limits<double>::infinity(), 1e-6, 1e-6);
+
+    int calls_gauss = ncalls;
+
+    fout << "exp(-x^2) from -∞ to ∞ = " << Igauss
+            << " (exact " << std::sqrt(M_PI)
+            << "), calls = " << calls_gauss << "\n";
+    
+    fout.close();
 
     return 0;
 }
