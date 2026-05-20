@@ -42,8 +42,6 @@ double erf_integral(
     return 1.0 - inv_sqrt_pi * I(f, 0.0, 1.0);
 }
 
-
-
 // double erf_integral(function<double(double)> integrate, double z);
 
 int main(){
@@ -122,10 +120,40 @@ int main(){
         double val = erf_integral(integ, z);
         double ref = erf(z); // C++ standard reference
 
-        file << z << " " << val << " " << ref << "\n";
+        file << z << " " << val << " " << ref << " " << fabs(ref-val) << "\n";
     }
 
     file.close();
+
+    ofstream conv_file("erf_convergence.dat");
+
+    const double exact = 0.84270079294971486934;
+
+    auto f = [](double x){
+        return exp(-x*x);
+    };
+
+    std::function<double(function<double(double)>,double,double,double,double,double,double)> integ =
+        [](function<double(double)> f, double a, double b,
+           double acc, double eps,
+           double f2, double f3)
+    {
+        return integrate(f,a,b,acc,eps,f2,f3);
+    };
+
+    for(double acc = 1e-1; acc >= 1e-10; acc *= 0.1){
+
+        double result = integ(f, 0.0, 1.0, acc, 0.0, NAN, NAN);
+
+        double error = fabs(result - exact);
+
+        conv_file << acc << " " << error << "\n";
+
+        cout << "acc = " << acc
+             << "  error = " << error << endl;
+    }
+
+    conv_file.close();
 
     return 0;
 }
