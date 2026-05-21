@@ -2,6 +2,7 @@
 #include <vector>
 #include <cmath>
 #include <fstream>
+#include <random>
 
 using namespace std;
 
@@ -173,6 +174,55 @@ double singular(vector<double> x){
     )/(M_PI*M_PI*M_PI);
 }
 
+mt19937 gen(1234);
+uniform_real_distribution<double> dist(0.0,1.0);
+
+double rnd(){
+    return dist(gen);
+}
+
+template<typename Random>
+pair<double,double> plainmc(
+    double f(vector<double>),
+    vector<double> a,
+    vector<double> b,
+    int N,
+    Random rnd
+){
+    int dim = a.size();
+
+    double V = 1.0;
+
+    for(int i=0;i<dim;i++)
+        V *= (b[i]-a[i]);
+
+    double sum1 = 0;
+    double sum2 = 0;
+
+    vector<double> x(dim);
+
+    for(int k=0;k<N;k++){
+
+        for(int i=0;i<dim;i++)
+            x[i] = a[i] + rnd()*(b[i]-a[i]);
+
+        double fx = f(x);
+
+        sum1 += fx;
+        sum2 += fx*fx;
+    }
+
+    double mean = sum1/N;
+
+    double sigma =
+        sqrt(sum2/N - mean*mean);
+
+    return {
+        mean*V,
+        sigma*V/sqrt(N)
+    };
+}
+
 int main(){
 
     lcg rng(1234);
@@ -248,21 +298,38 @@ int main(){
 
     for(int N=1000; N<=1000000; N*=2){
 
-        auto qmc = quasimc(singular,aq,bq,N);
+        auto lcg_result =
+            plainmc(singular,aq,bq,N,rng);
 
-        double actual_error =
-            fabs(qmc.first - exact);
+        auto mt_result =
+            plainmc(singular,aq,bq,N,rnd);
+
+        auto quasi_result =
+            quasimc(singular,aq,bq,N);
+
+        double lcg_error =
+            fabs(lcg_result.first - exact);
+
+        double mt_error =
+            fabs(mt_result.first - exact);
+
+        double quasi_error =
+            fabs(quasi_result.first - exact);
 
         qout
             << N << " "
-            << qmc.second << " "
-            << actual_error << endl;
+            << lcg_error << " "
+            << mt_error << " "
+            << quasi_error << endl;
 
         cout
             << N << " "
-            << qmc.first << " "
-            << actual_error << endl;
+            << lcg_error << " "
+            << mt_error << " "
+            << quasi_error << endl;
     }
+
+    qout.close();
 
     return 0;
 }
