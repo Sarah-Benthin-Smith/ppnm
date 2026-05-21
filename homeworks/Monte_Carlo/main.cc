@@ -93,6 +93,86 @@ double ellipsoid(vector<double> x){
         return 0.0;
 }
 
+double corput(int n, int base){
+
+    double q = 0;
+    double bk = 1.0/base;
+
+    while(n > 0){
+        q += (n % base)*bk;
+        n /= base;
+        bk /= base;
+    }
+
+    return q;
+}
+
+vector<double> halton(int n, int dim){
+
+    int bases[] = {2,3,5,7,11,13,17,19};
+
+    vector<double> x(dim);
+
+    for(int i=0;i<dim;i++)
+        x[i] = corput(n,bases[i]);
+
+    return x;
+}
+
+pair<double,double> quasimc(
+    double f(vector<double>),
+    vector<double> a,
+    vector<double> b,
+    int N){
+    int dim = a.size();
+
+    double V = 1.0;
+
+    for(int i=0;i<dim;i++)
+        V *= (b[i]-a[i]);
+
+    double sum1 = 0;
+    double sum2 = 0;
+
+    for(int n=1;n<=N;n++){
+
+        vector<double> x = halton(n,dim);
+
+        vector<double> y = halton(n,dim);
+
+        // shift second sequence slightly
+        for(int i=0;i<dim;i++)
+            y[i] = fmod(y[i] + 0.5,1.0);
+
+        for(int i=0;i<dim;i++){
+            x[i] = a[i] + x[i]*(b[i]-a[i]);
+            y[i] = a[i] + y[i]*(b[i]-a[i]);
+        }
+
+        sum1 += f(x);
+        sum2 += f(y);
+    }
+
+    double I1 = V*sum1/N;
+    double I2 = V*sum2/N;
+
+    double error = fabs(I1-I2);
+
+    return {I1,error};
+}
+
+double singular(vector<double> x){
+
+    double X = x[0];
+    double Y = x[1];
+    double Z = x[2];
+
+    return 1.0/(
+        1
+        - cos(X)*cos(Y)*cos(Z)
+    )/(M_PI*M_PI*M_PI);
+}
+
 int main(){
 
     lcg rng(1234);
@@ -156,6 +236,33 @@ int main(){
     }
 
     out2.close();
+    
+    cout << "\nQuasi Random\n";
+
+    vector<double> aq = {0,0,0};
+    vector<double> bq = {M_PI,M_PI,M_PI};
+
+    double exact = 1.3932039296856768;
+
+    ofstream qout("compare.dat");
+
+    for(int N=1000; N<=1000000; N*=2){
+
+        auto qmc = quasimc(singular,aq,bq,N);
+
+        double actual_error =
+            fabs(qmc.first - exact);
+
+        qout
+            << N << " "
+            << qmc.second << " "
+            << actual_error << endl;
+
+        cout
+            << N << " "
+            << qmc.first << " "
+            << actual_error << endl;
+    }
 
     return 0;
 }
