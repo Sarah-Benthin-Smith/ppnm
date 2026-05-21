@@ -296,7 +296,7 @@ int main(){
 
     ofstream qout("compare.dat");
 
-    for(int N=1000; N<=1000000; N*=2){
+    for(int N=100; N<=1000000; N*=2){
 
         auto lcg_result =
             plainmc(singular,aq,bq,N,rng);
