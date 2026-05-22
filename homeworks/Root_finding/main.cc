@@ -58,7 +58,7 @@ pp::vector himmel_grad(pp::vector x){
 double M(double E)
 {
     double rmin = 1e-4;
-    double rmax = 6.0;
+    double rmax = 8.0;
 
     pp::vector y(2);
     y[0] = rmin;
