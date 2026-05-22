@@ -18,9 +18,9 @@ rkstep.o: rkstep.cpp
 clean:
 	rm -f *.o main
 
-# plot: main
-# 	./main
-# 	gnuplot orbit.gp threebody.gp 
+plot: main
+	./main
+	gnuplot wf.gp
 
 
 

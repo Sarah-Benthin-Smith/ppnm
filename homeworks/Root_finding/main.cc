@@ -4,8 +4,12 @@
 
 #include "matrix.h"
 #include "newton.h"
+#include "ode.h"
 
 // using namespace std;
+
+std::vector<double> r_save;
+std::vector<double> f_save;
 
 pp::vector f1(pp::vector x){
 
@@ -49,6 +53,58 @@ pp::vector himmel_grad(pp::vector x){
         + 4*Y*(X + Y*Y - 7);
 
     return g;
+}
+
+double M(double E)
+{
+    double rmin = 1e-4;
+    double rmax = 6.0;
+
+    pp::vector y(2);
+    y[0] = rmin;
+    y[1] = 1.0;
+
+    auto ode = [E](double r, pp::vector y)
+    {
+        pp::vector dydr(2);
+        dydr[0] = y[1];
+        dydr[1] = -2.0 * (E + 1.0/r) * y[0];
+        return dydr;
+    };
+
+    auto [rlist, ylist] = driver(ode, rmin, rmax, y, 0.01, 1e-4, 1e-4);
+
+    // auto ylist = std::get<1>(result);
+
+    r_save.clear();
+    f_save.clear();
+
+    for(std::size_t i = 0; i < rlist.size(); i++)
+    {
+        r_save.push_back(rlist[i]);
+        f_save.push_back(ylist[i][0]);
+    }
+
+    pp::vector y_end = ylist.back();
+
+    return y_end[0];
+}
+
+pp::vector M_wrapper(pp::vector Evec)
+{
+    pp::vector out(1);
+    out[0] = M(Evec[0]);
+    return out;
+}
+
+pp::vector schrodinger(double r, pp::vector y, double E)
+{
+    pp::vector dydr(2);
+
+    dydr[0] = y[1];
+    dydr[1] = -2.0 * (E + 1.0/r) * y[0];
+
+    return dydr;
 }
 
 int main(){
@@ -104,6 +160,22 @@ int main(){
     pout << "Himmelblau minimum:\n";
     pout << rh[0] << " "
          << rh[1] << "\n\n";
+
+    //  Schrödinger
+
+    pp::vector E(1);
+    E[0] = -0.5;   // vigtig start guess
+
+    pp::vector root = newton(M_wrapper, E);
+
+    std::cout << "Energy = " << root[0] << "\n";
+
+    std::ofstream file("wf.dat");
+
+    for (int i = 0; i < r_save.size(); i++)
+    {
+        file << r_save[i] << " " << f_save[i] << "\n";
+    }
 
     return 0;
 }
