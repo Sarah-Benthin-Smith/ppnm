@@ -169,6 +169,7 @@ int main(){
     pp::vector root = newton(M_wrapper, E);
 
     std::cout << "Energy = " << root[0] << "\n";
+    pout << "Energy = " << root[0] << "\n";
 
     std::ofstream file("wf.dat");
 

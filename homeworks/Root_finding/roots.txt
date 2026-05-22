@@ -7,3 +7,4 @@ Rosenbrock minimum:
 Himmelblau minimum:
 3.38515 0.0738519
 
+Energy = -0.499975
