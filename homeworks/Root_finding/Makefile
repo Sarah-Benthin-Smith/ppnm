@@ -8,7 +8,6 @@ main: $(OBJS)
 
 main.o: main.cc
 ode.o: ode.cpp
-# vec.o: vec.cc
 matrix.o: matrix.cc
 jacobian.o: jacobian.cpp
 newton.o: newton.cpp
@@ -20,7 +19,7 @@ clean:
 
 plot: main
 	./main
-	gnuplot wf.gp
+	gnuplot plot_wf.gp
 
 
 
