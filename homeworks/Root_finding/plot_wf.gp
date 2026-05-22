@@ -7,4 +7,4 @@ set ylabel "y"
 set grid
 
 plot \
-    "wf.dat" using 1:2 with linespoints title "Wavefunction"
+    "wf.dat" using 1:2 with lines title "Wavefunction"
