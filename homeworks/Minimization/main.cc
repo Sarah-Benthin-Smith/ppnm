@@ -99,52 +99,52 @@ void write_higgs_fit(const std::string& filename, const pp::vector& x){
 
 int main(){
 
-    // std::ofstream pout("minimas.txt");
+    std::ofstream pout("minimas.txt");
 
-    // // Rosenbrock funktion
+    // Rosenbrock funktion
 
-    // pp::vector start(2);
+    pp::vector start(2);
 
-    // start[0] = -2;
-    // start[1] = 5;
+    start[0] = -2;
+    start[1] = 5;
 
-    // pout << "=== Rosenbrock function ===\n";
+    pout << "=== Rosenbrock function ===\n";
 
-    // auto resR = newton(rosenbrock, start);
+    auto [xminR, stepsR] = pp::newton_minimize(rosenbrock, start);
 
-    // pout << "Steps   = " << resR.steps << "\n";
+    pout << "Steps   = " << stepsR << "\n";
 
-    // pout << "Minimum = (";
-    // for(int i = 0; i < resR.xmin.size(); i++){
-    //     pout << resR.xmin[i];
-    //     if(i < resR.xmin.size() - 1) pout << ", ";
-    // }
-    // pout << ")\n\n";
+    pout << "Minimum = (";
+    for(int i = 0; i < xminR.size(); i++){
+        pout << xminR[i];
+        if(i < xminR.size() - 1) pout << ", ";
+    }
+    pout << ")\n\n";
 
-    // // Himmelblau funktion
+    // Himmelblau funktion
 
-    // pp::vector starth(2);
+    pp::vector starth(2);
 
-    // starth[0] = 4;
-    // starth[1] = 4;
+    starth[0] = 4;
+    starth[1] = 4;
 
-    // pout << "=== Himmelblau function ===\n";
+    pout << "=== Himmelblau function ===\n";
 
-    // auto resH = newton(himmelblau, starth);
+    auto [xminH, stepsH] = pp::newton_minimize(himmelblau, starth);
 
-    // pout << "Steps   = " << resH.steps << "\n";
+    pout << "Steps   = " << stepsH << "\n";
 
-    // pout << "Minimum = (";
-    // for(int i = 0; i < resH.xmin.size(); i++){
-    //     pout << resH.xmin[i];
-    //     if(i < resH.xmin.size() - 1) pout << ", ";
-    // }
-    // pout << ")\n";
+    pout << "Minimum = (";
+    for(int i = 0; i < xminH.size(); i++){
+        pout << xminH[i];
+        if(i < xminH.size() - 1) pout << ", ";
+    }
+    pout << ")\n";
 
 
     // Higgs
 
-    std::cout << "\nPART B: Higgs fit\n";
+    pout << "\nPART B: Higgs fit\n";
 
     std::vector<HiggsPoint> data = read_higgs_data(std::cin);
 
@@ -164,28 +164,37 @@ int main(){
     auto [best, fit_steps] = pp::newton_minimize(objective, xfit, 1e-6);
     double Dmin = higgs_deviation(best, data);
 
-    std::cout << "Best fit parameters (forward):\n";
-    std::cout << "m     = " << best[0] << "\n";
-    std::cout << "Gamma = " << best[1] << "\n";
-    std::cout << "A     = " << best[2] << "\n";
-    std::cout << "Dmin  = " << Dmin << "\n";
-    std::cout << "steps = " << fit_steps << "\n";
+    pout << "Best fit parameters (forward):\n";
+    pout << "m     = " << best[0] << "\n";
+    pout << "Gamma = " << best[1] << "\n";
+    pout << "A     = " << best[2] << "\n";
+    pout << "Dmin  = " << Dmin << "\n";
+    pout << "steps = " << fit_steps << "\n";
 
     write_higgs_fit("higgs_fit.dat", best);
 
-    // std::cout << "\nPART C: Central differences\n";
+    pp::vector x0 = {-1.0, 2.0};
 
-    // auto [rosen_min_c, rosen_steps_c] = pp::newton_minimize_central(rosenbrock, x0);
-    // std::cout << "Rosenbrock minimum (central): ";
-    // rosen_min_c.print();
-    // std::cout << "Rosenbrock steps (central): " << rosen_steps_c << "\n";
+    std::vector<pp::vector> starts = {
+        { 3.1,  2.1},
+        {-2.7,  3.0},
+        {-3.7, -3.1},
+        { 3.5, -1.8}
+    };
 
-    // for(auto xstart : starts){
-    //     auto [xmin, steps] = pp::newton_minimize_central(himmelblau, xstart);
-    //     std::cout << "Himmelblau minimum (central): ";
-    //     xmin.print();
-    //     std::cout << "Himmelblau steps (central): " << steps << "\n";
-    // }
+    pout << "\nPART C: Central differences\n";
+
+    auto [rosen_min_c, rosen_steps_c] = pp::newton_minimize_central(rosenbrock, x0);
+    pout << "Rosenbrock minimum (central): ";
+    rosen_min_c.print();
+    pout << "Rosenbrock steps (central): " << rosen_steps_c << "\n\n";
+
+    for(auto xstart : starts){
+        auto [xmin, steps] = pp::newton_minimize_central(himmelblau, xstart);
+        pout << "Himmelblau minimum (central): ";
+        pout << xmin << "\n";// xmin.print();
+        pout << "Himmelblau steps (central): " << steps << "\n";
+    }
 
 
     return 0;

@@ -85,4 +85,22 @@ matrix operator*(const double c, matrix A);
 matrix operator/(matrix A, const double c);
 vector operator*(const matrix& A, const vector& v);
 
+
+inline std::ostream& operator<<(std::ostream& os, const vector& v){
+
+    os << "(";
+
+    for(int i = 0; i < v.size(); i++){
+
+        os << v[i];
+
+        if(i < v.size()-1)
+            os << ", ";
+    }
+
+    os << ")";
+
+    return os;
+}
+
 }//pp
