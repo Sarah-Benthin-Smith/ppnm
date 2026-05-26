@@ -1,0 +1,7 @@
+=== Rosenbrock function ===
+Steps   = 25
+Minimum = (0.999856, 0.999711)
+
+=== Himmelblau function ===
+Steps   = 6
+Minimum = (3, 2)
