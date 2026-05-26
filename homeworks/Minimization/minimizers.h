@@ -1,22 +1,43 @@
-#include "minimizers.cc"
+#pragma once
+#include <functional>
+#include <utility>
+#include "matrix.h"
 
+namespace pp {
 
+using pp::vector;
+using pp::matrix;
 
-double rosenbrock(vector v){
+// FORWARD DIFFERENCE
+vector gradient(std::function<double(vector)> phi, vector x);
 
-    double x = v[0];
-    double y = v[1];
+matrix hessian(std::function<double(vector)> phi, vector x);
 
-    return pow(1-x,2)
-         + 100*pow(y-x*x,2);
-}
+std::pair<vector,int> newton_minimize(
+    std::function<double(vector)> phi,
+    vector x0,
+    double acc = 1e-3,
+    int max_iter = 1000,
+    double alpha_min = 1.0/1024.0
+);
 
-double himmelblau(vector v){
+// CENTRAL DIFFERENCE
+vector gradient_central(
+    std::function<double(vector)> phi,
+    vector x
+);
 
-    double x = v[0];
-    double y = v[1];
+matrix hessian_central(
+    std::function<double(vector)> phi,
+    vector x
+);
 
-    return pow(x*x+y-11,2)
-         + pow(x+y*y-7,2);
-}
+std::pair<vector,int> newton_minimize_central(
+    std::function<double(vector)> phi,
+    vector x0,
+    double acc = 1e-3,
+    int max_iter = 1000,
+    double alpha_min = 1.0/1024.0
+);
 
+} // namespace pp

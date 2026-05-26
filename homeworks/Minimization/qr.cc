@@ -5,39 +5,39 @@
 namespace pp {
 
 // Gram-Schmidt
-qr::qr(const matrix& A) : Q(A), R(A.size2(), A.size2()) { // Decomposition
+qr::qr(const matrix& A) : Q(A), R(A.size2(), A.size2()) {
 
     int n = Q.size1();
     int m = Q.size2();
 
-    for(int j = 0; j < m; j++){ // Process one column at a time
+    for(int j = 0; j < m; j++){
 
         // norm
         double norm = 0;
         for(int i = 0; i < n; i++)
             norm += Q(i,j)*Q(i,j);
 
-        norm = std::sqrt(norm); // Computes the column norm
+        norm = std::sqrt(norm);
 
-        if(norm == 0) throw std::runtime_error("Matrix is rank deficient"); // Rank check - if column in 0 then the matrix is rank deficient
+        if(norm == 0) throw std::runtime_error("Matrix is rank deficient");
 
-        R(j,j) = norm; // Store diagonal of R
+        R(j,j) = norm;
 
         // normalize column j
         for(int i = 0; i < n; i++)
-            Q(i,j) /= norm; // Normalize column - now the column j has length 1
+            Q(i,j) /= norm;
 
         // orthogonalize remaining columns
-        for(int k = j+1; k < m; k++){ // Remove the component of column k in direction of column j
+        for(int k = j+1; k < m; k++){
 
             double dot = 0;
             for(int i = 0; i < n; i++)
-                dot += Q(i,j)*Q(i,k); // Computing the dot product
+                dot += Q(i,j)*Q(i,k);
 
             R(j,k) = dot;
 
             for(int i = 0; i < n; i++)
-                Q(i,k) -= Q(i,j)*dot; // Subtract projection
+                Q(i,k) -= Q(i,j)*dot;
         }
     }
 }
@@ -53,16 +53,16 @@ vector qr::solve(const vector& b) const {
     for(int i = 0; i < m; i++){
         y[i] = 0;
         for(int k = 0; k < Q.size1(); k++)
-            y[i] += Q(k,i)*b[k]; // Compute y=Q^T b
+            y[i] += Q(k,i)*b[k];
     }
 
     vector x(m);
 
-    for(int i = m-1; i >= 0; i--){ // Back substitution (R is upper triangular Rx=y)
+    for(int i = m-1; i >= 0; i--){
         double sum = y[i];
 
         for(int k = i+1; k < m; k++)
-            sum -= R(i,k)*x[k]; 
+            sum -= R(i,k)*x[k];
 
         x[i] = sum / R(i,i);
     }
@@ -78,7 +78,7 @@ double qr::det() const {
     return d;
 }
 
-// Matrix inverse
+// Inverse
 matrix qr::inverse() const {
 
     int n = Q.size1();
@@ -93,12 +93,12 @@ matrix qr::inverse() const {
         // reset e
         for(int j = 0; j < n; j++) e[j] = 0;
 
-        e[i] = 1; // Build unit vectors
+        e[i] = 1;
 
-        vector x = solve(e); // Solve - gives one columns of the inverse
+        vector x = solve(e);
 
         for(int k = 0; k < m; k++)
-            B(k,i) = x[k]; // Store result
+            B(k,i) = x[k];
     }
 
     return B;
