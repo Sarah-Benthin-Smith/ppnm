@@ -37,5 +37,19 @@ int main(){
         << "\n";
     }
 
+    std::ofstream Bout("ann_opgB.data");
+
+    for(double x=-1;x<=1;x+=0.01){
+
+        Bout
+        << x << " "
+        << g(x) << " "
+        << network.response(x) << " "
+        << network.derivative(x) << " "
+        << network.second_derivative(x) << " "
+        << network.antiderivative(x)
+        << "\n";
+    }
+
     return 0;
 }

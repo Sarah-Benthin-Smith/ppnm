@@ -24,6 +24,16 @@ double ann::activation_derivative(double x){ // Derivative
     return exp(-x*x)*(1 - 2*x*x);
 } 
 
+double ann::activation_second_derivative(double x){
+
+    return exp(-x*x)*(4*x*x*x - 6*x);
+}
+
+double ann::activation_antiderivative(double x){
+
+    return -0.5*exp(-x*x);
+}
+
 double ann::response(double x){ // Response
 
     double sum = 0;
@@ -36,6 +46,57 @@ double ann::response(double x){ // Response
         double z = (x-a)/b;
 
         sum += w*activation(z);
+    }
+
+    return sum;
+}
+
+double ann::derivative(double x){
+
+    double sum = 0;
+
+    for(int i=0;i<n;i++){
+
+        double a = p[3*i+0];
+        double b = p[3*i+1];
+        double w = p[3*i+2];
+        double z = (x-a)/b;
+
+        sum += w*activation_derivative(z)/b;
+    }
+
+    return sum;
+}
+
+double ann::second_derivative(double x){
+
+    double sum = 0;
+
+    for(int i=0;i<n;i++){
+
+        double a = p[3*i+0];
+        double b = p[3*i+1];
+        double w = p[3*i+2];
+        double z = (x-a)/b;
+
+        sum += w* activation_second_derivative(z)/(b*b);
+    }
+
+    return sum;
+}
+
+double ann::antiderivative(double x){
+
+    double sum = 0;
+
+    for(int i=0;i<n;i++){
+
+        double a = p[3*i+0];
+        double b = p[3*i+1];
+        double w = p[3*i+2];
+        double z = (x-a)/b;
+
+        sum +=w*b*activation_antiderivative(z);
     }
 
     return sum;
