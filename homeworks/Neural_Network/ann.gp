@@ -8,5 +8,5 @@ set title "Artificial Neural Network assignment A"
 set grid
 
 plot \
-'ann.data' using 1:2 with lines lc rgb '#d77f21' title 'true', \
-'ann.data' using 1:3 with lines lc rgb '#6a0dad' title 'ann'
+'ann.data' using 1:2 with lines lw 3 lc rgb '#d77f21' title 'true', \
+'ann.data' using 1:3 with lines lw 2 lc rgb '#6a0dad' dt 2 title 'ann'
