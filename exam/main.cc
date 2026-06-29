@@ -9,7 +9,7 @@ int main(){
     std::ofstream pout("README.txt");
 
     pout << "The Gauss-Newton algorithm" << "\n";
-    pout << "The method is used to solve non-linear least squares problems. It is an extension to Newtons method for finding the minima of a non-linear function." << "\n";
+    pout << "\nThe method is used to solve non-linear least squares problems. It is an extension to Newtons method for finding the minima of a non-linear function." << "\n";
     pout << "I will be using alterations of code created in homeworks OLS and Minimization." << "\n";
     pout << "This includes the minimizers.cc and minimizers.h in Minimization, where the Hessian algorithm has been removed and the Gauss-Newton has been added instead." << "\n";
     pout << "It also includes the qr decomposition used in various handins, here no alterations has been made - it is the same for the matrix class and the lsfit." << "\n";
@@ -56,7 +56,7 @@ int main(){
     double T12  = log(2.0)/c1;
     double dT12 = log(2.0)/(c1*c1)*dc1;
 
-    pout << "Log-linear fit (OLS):" << "\n";
+    pout << "\nLog-linear fit (OLS):" << "\n";
     pout << "a = " << a << " +/- " << da << "\n";
     pout << "lambda = " << c1 << "+/-" << dc1 << "\n";
     pout << "Half-life = " << T12 << "+/-" << dT12 << " days\n";
@@ -86,20 +86,33 @@ int main(){
     pout << "a = " << a_gn << " +/- " << da_gn << "\n";
     pout << "lambda = " << lambda_gn << " +/- " << dlambda_gn << "\n";
     pout << "Half-life = " << T12_gn << " +/- " << dT12_gn << " days\n";
-    pout << "Modern Value = 3.6316 days\n";
+    pout << "\nModern Value = 3.6316 days\n";
+    double sigma_diff = std::abs(T12_gn - 3.6316) / dT12_gn;
+    pout << "Difference from modern value: " << sigma_diff << " sigma\n";
+
+    std::ofstream datafile("data.txt");
+
+    for(int i=0;i<9;i++){
+        datafile
+            << t[i]  << " "
+            << y[i]  << " "
+            << dy[i] << "\n";
+    }
+
+    std::ofstream fitout("fit.dat");
+    fitout << "# t  y_ols  y_gn\n";
+    for(double tt=0; tt<=15; tt+=0.1){
+        double y_ols = a    * exp(-c1       * tt);
+        double y_gn  = a_gn * exp(-lambda_gn * tt);
+        fitout << tt << " " << y_ols << " " << y_gn << "\n";
+    }
+    fitout.close();
 
     return 0;
 
 }
 
-    // std::ofstream datafile("data.txt");
 
-    // for(int i=0;i<9;i++){
-    //     datafile
-    //         << t[i]  << " "
-    //         << y[i]  << " "
-    //         << dy[i] << "\n";
-    // }
     
     // std::ofstream fitout("fit.dat");
 

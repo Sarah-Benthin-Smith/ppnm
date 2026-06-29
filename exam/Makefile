@@ -15,7 +15,7 @@ qr.o: qr.cc qr.h matrix.h
 minimizers.o: minimizers.cc minimizers.h
 
 clean:
-	rm -f *.o main README.txt
+	rm -f *.o main README.txt fit.dat
 
 test:
 	./main
