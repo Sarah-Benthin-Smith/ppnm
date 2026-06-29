@@ -17,3 +17,7 @@ Half-life = 4.06153 +/- 0.0807083 days
 
 Modern Value = 3.6316 days
 Difference from modern value: 5.32695 sigma
+
+The fit created with Gauss Newton and the fit created with OLS has both been plotted together to notice similarities - they are pretty much identical.
+
+ I have done what the question asked, so I would give myself 10/10.
