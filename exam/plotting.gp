@@ -10,6 +10,6 @@ set key box
 set pointintervalbox 0
 
 plot \
-"fit.dat" using 1:2 with lines lc rgb "#e72bd7" title "Exponential fit OLS", \
-"fit.dat" using 1:3 with lines lc rgb "#6A0DAD" lw 2.4 title "Exponential fit GN", \
+"fit.dat" using 1:2 with lines lc rgb "#e72bd7" lw 2.4 title "Exponential fit OLS", \
+"fit.dat" using 1:3 with lines lc rgb "#6A0DAD" lw 1.5 title "Exponential fit GN", \
 "data.txt" using 1:2:3 with yerrorbars lc rgb "#cb730e" pt 7 ps 0.5 lw 1.3 title "Experimental data"
